@@ -3,9 +3,14 @@ df <- read.csv('data_scrape/reddit_posts_all.csv',
                encoding="UTF-8",
                stringsAsFactors=FALSE)
 
-install.packages("sentimentr")
+# install.packages("sentimentr")
+install.packages("syuzhet")
+install.packages("fmsb")
 library(sentimentr)
-
+library(tidytext)
+library(syuzhet)
+library(fmsb)
+library(dplyr)
 
 sentiment=sentiment_by(df$body)
 summary(sentiment$ave_sentiment)
@@ -39,3 +44,31 @@ ggplot(df_sentiment_by_day, aes(x=date, y=ave_sentiment,group=1)) +
   scale_x_date() +
   xlab("") +
   ylab("Average Sentiment")
+
+
+# 10-element sentiment analysis
+df$sentiment <- get_nrc_sentiment(df$body) 
+
+df1 <- df %>%
+      select(sentiment) %>% 
+      do.call(data.frame, .)
+
+names(df1) <- gsub("sentiment.", "", names(df1), fixed = TRUE)
+
+
+sum_df <- df1 %>%
+  summarize_if(is.numeric, sum, na.rm=TRUE)
+
+sum_df <- rbind(rep(18000, 10), rep(3000, 10), sum_df)
+
+radarchart(sum_df  , axistype=1 , 
+            
+            #custom polygon
+            pcol=rgb(0.2,0.5,0.5,0.9) , pfcol=rgb(0.2,0.5,0.5,0.5) , plwd=4 , 
+            
+            #custom the grid
+            cglcol="grey", cglty=1, axislabcol="grey", cglwd=0.8,
+            
+            #custom labels
+            vlcex=0.8 
+)
