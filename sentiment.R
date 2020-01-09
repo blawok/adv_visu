@@ -11,11 +11,13 @@ library(tidytext)
 library(syuzhet)
 library(fmsb)
 library(dplyr)
+library(ggplot2)
+library(plotly)
 
 sentiment=sentiment_by(df$body)
 summary(sentiment$ave_sentiment)
 
-library(ggplot2)
+
 qplot(sentiment$ave_sentiment,
       geom="histogram",
       binwidth=0.1,
@@ -61,6 +63,29 @@ sum_df <- df1 %>%
 
 sum_df <- rbind(rep(18000, 10), rep(3000, 10), sum_df)
 
+# 1 sposob na radar chart (bedzie mozna go wrzucic do subplota w plotly, a drugi nie wiem czy sie da)
+p <- plot_ly(
+            type = 'scatterpolar',
+            fill = 'toself',
+            mode = "lines"
+          ) %>%
+            add_trace(
+              r = as.numeric(as.vector(sum_df[3,])),
+              theta = as.character(as.vector(names(sum_df))),
+              name = 'Posts'
+            ) %>%
+            layout(
+              polar = list(
+                radialaxis = list(
+                  visible = T,
+                  range = c(3000,18000)
+                )
+              )
+            )
+
+p
+
+# 2 sposob
 radarchart(sum_df  , axistype=1 , 
             
             #custom polygon
