@@ -12,3 +12,13 @@ added later
 https://www.reddit.com/r/worldnews/comments/c35akk/trump_approves_strikes_on_iran_but_then_abruptly/
 https://www.reddit.com/r/TrueOffMyChest/comments/ekad1u/redditors_know_nothing_about_iran_and_it/
 https://www.reddit.com/r/news/comments/ej7ykn/iraqi_tv_irans_gen_soleimani_killed_in_baghdad/
+
+
+
+c35akk.csv - 21.06.19 - [USA] Trump Approves Strikes on Iran, but Then Abruptly Pulls Back
+c555x4.csv - 25.06.19 - [IRAN] Iran's president says Trump White House 'afflicted by mental retardation'
+ccednx.csv - 12.07.19 - [USA] House votes 251-170 adopting bipartisan provision that would require President Trump to get approval from congress before striking Iran
+ej7ykn.csv - 03.01.20 - [USA] Iraqi TV: Iran’s Gen. Soleimani killed in Baghdad strike
+ekad1u.csv - 05.01.20 - [PPL PERSPECTIVE] Redditors know nothing about Iran and it frustrates me to no end.
+elku7e.csv - 08.01.20 - [IRAN] Megathread: Iran launches missiles at US airbase in Iraq
+elkxvb.csv - 08.01.20 - [IRAN] [Megathread] Iran Fires Missiles at U.S. Bases in Iraq Following US Strike Killing IRGC Major General Suleimani
