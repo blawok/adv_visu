@@ -4,15 +4,13 @@
  https://www.reddit.com/r/worldnews/comments/c3ealo/iran_warned_twice_before_downing_us_pilotless/?utm_source=share&utm_medium=mweb&fbclid=IwAR2mla0pQgeTx7VBxpI2m7furlrAEe8cxc1v7pTF7PbAkut4lzUspAN4cwA&_branch_match_id=743164684587958295
  https://www.reddit.com/r/worldnews/comments/bq4izl/iran_dismisses_possibility_of_conflict_says_does/?utm_source=share&utm_medium=mweb&fbclid=IwAR1-DZqdun9uszs6EkH8AGgRe5NAG85IuIrWJI43TRu7ggG1Z_YReKIoi6U&_branch_match_id=743164684587958295
 
-# new
-# https://www.reddit.com/r/politics/comments/ej95ak/megathread_qassim_soleimani_head_of_irans_elite/
 
 
 added later
 https://www.reddit.com/r/worldnews/comments/c35akk/trump_approves_strikes_on_iran_but_then_abruptly/
 https://www.reddit.com/r/TrueOffMyChest/comments/ekad1u/redditors_know_nothing_about_iran_and_it/
 https://www.reddit.com/r/news/comments/ej7ykn/iraqi_tv_irans_gen_soleimani_killed_in_baghdad/
-
+https://www.reddit.com/r/politics/comments/ej95ak/megathread_qassim_soleimani_head_of_irans_elite/
 
 
 c35akk.csv - 21.06.19 - [USA] Trump Approves Strikes on Iran, but Then Abruptly Pulls Back
@@ -22,3 +20,5 @@ ej7ykn.csv - 03.01.20 - [USA] Iraqi TV: Iran’s Gen. Soleimani killed in Baghda
 ekad1u.csv - 05.01.20 - [PPL PERSPECTIVE] Redditors know nothing about Iran and it frustrates me to no end.
 elku7e.csv - 08.01.20 - [IRAN] Megathread: Iran launches missiles at US airbase in Iraq
 elkxvb.csv - 08.01.20 - [IRAN] [Megathread] Iran Fires Missiles at U.S. Bases in Iraq Following US Strike Killing IRGC Major General Suleimani
+ej95ak.csv - 03.01.20 - [USA?] Megathread: Qassim Soleimani, head of Iran’s elite Quds Force, killed in Baghdad by U.S. Airstrike Ordered by President Donald Trump
+
