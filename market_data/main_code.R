@@ -143,7 +143,7 @@ df$ID <- seq.int(nrow(df))
 
 
 df <- df %>%
-  accumulate_by(~ID)
+  accumulateBy(~ID)
 
 p1 <- df_x_acc %>%
   plot_ly(
@@ -210,3 +210,15 @@ p2 <- plot_ly(z = corr_x, type = "heatmap"
 p2
 
 
+
+# Subplots for in time analysis
+# 
+# p <- economics %>%
+#   tidyr::gather(variable, value, -date) %>%
+#   transform(id = as.integer(factor(variable))) %>%
+#   plot_ly(x = ~date, y = ~value, color = ~variable, colors = "Dark2",
+#           yaxis = ~paste0("y", id)) %>%
+#   add_lines() %>%
+#   subplot(nrows = 5, shareX = TRUE)
+# 
+# p
