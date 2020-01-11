@@ -55,6 +55,7 @@ plot_sentiment <- function(df = NULL, use_default = FALSE) {
   }
   
   df$date <- as.Date(df$date)
+  df$date <-format(as.Date(strptime(df$timestamp, '%Y-%M-%D %H:%M:%S')), "%b %d %Y")
   
   ggplot(df, aes(x=df$date, y=df$ave_sentiment, group=1)) +
     geom_point()+
@@ -66,3 +67,17 @@ plot_sentiment <- function(df = NULL, use_default = FALSE) {
 
 # plot_sentiment(df)
 
+# ---------------------------------------------------------------- SENTIMENT HISTOGRAM PLOTTING FUNCTION
+
+plot_hist_sentiment <- function(df, by) {
+  
+  library(ggplot2)
+  
+  ggplot(df, aes(x = by)) +
+    geom_histogram(aes(y = ..density..)) +
+    stat_function(fun = dnorm, colour = "red",
+                  arg = list(mean = mean(df$by, na.rm = TRUE),
+                             sd = sd(df$by, na.rm = TRUE)))
+}
+
+# plot_sentiment(df)
