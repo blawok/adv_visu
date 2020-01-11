@@ -16,16 +16,6 @@ library(quantmod)
 
 Sys.setlocale("LC_TIME", "English")
 
-# setwd(...)
-
-# Currencies: USD/VES, USD/EUR
-# Companies: GE (has many businesses in Iraq), XOM (Exxon), ADM (trading company), HAL (Halliburton), LMT (Lockheed Martin - glowice)
-# Commodities: CL (Ropa), ZG (Gold)
-# World Indices: GSPC (S&P500), DJI (Dow Jones), FTSE (FTSE100)
-
-
-
-
 
 company_names <- c("GE", "XOM", "ADM", "HAL", "LMT")
 currencies <- c("USD/IRR", "EUR/USD", "GBP/USD")
@@ -137,13 +127,12 @@ df_x_acc <- df_x %>%
   accumulateBy(~ID)
 
 
-df <- data.frame(Date=index(quot_ADM),coredata(quot_ADM))
+write.zoo(data_x,file="merged_indices.csv",index.name="date",row.names=FALSE,col.names=TRUE,sep=",")
 
-df$ID <- seq.int(nrow(df))
+z <- read.zoo("merged_indices.csv", sep=",", header = TRUE, tz = "")
+x <- as.xts(z)
 
 
-df <- df %>%
-  accumulateBy(~ID)
 
 p1 <- df_x_acc %>%
   plot_ly(

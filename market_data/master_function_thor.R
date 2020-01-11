@@ -2,6 +2,19 @@ library(plotly)
 library(xts)
 library(dplyr)
 library(tidyr)
+library(zoo)
+
+# Getting Reddit csv to work
+prepareReddit <- function(file_name = "../data/daily_sentiment.csv") {
+  df_redd <- read.csv(file_name)
+  df_redd$date <- as.Date(df_redd$date)
+  df_redd$date <- as.POSIXct(strptime(df_redd$date, "%Y-%m-%d"))
+  df_redd$ave_sentiment <- as.numeric(as.character(df_redd$ave_sentiment))
+  df_redd$X <- NULL
+  qxts <- xts(df_redd[,2], order.by=df_redd[,1])
+  write.zoo(qxts,file="reddit_sentiment.csv",index.name="date",row.names=FALSE,col.names=TRUE,sep=",")
+}
+
 
 accumulateBy <- function(dat, var) {
   var <- lazyeval::f_eval(var, dat)
@@ -21,6 +34,20 @@ csvToXTS <- function(csv_file){
 }
 
 xts1 <- csvToXTS("merged_indices.csv")
+index(xts1) <- round(index(xts1), "days")
+
+xts_reddit <- csvToXTS("reddit_sentiment.csv")
+
+xts_reddit <- apply.daily(xts_reddit, sum)
+xts_merged <- merge.xts(xts1, xts_reddit) %>% 
+  na.omit()
+
+# zoo_m <- zoo(xts_merged)
+# zoo_m$xts_reddit <- rollapply(data = zoo_m$xts_reddit, width = 30, mean, na.rm = T, fill=NA, align = "right")
+# xts_merged <- xts(zoo_m) %>%
+#   na.omit()
+
+
 
 xtsToDF <- function(xts_file) {
   
@@ -34,84 +61,27 @@ xtsToDF <- function(xts_file) {
 }
 
 df1 <- xtsToDF(xts1)
+dfm <- xtsToDF(xts_m)
 
 plotThreeLines <- function(df_file, index_1, index_2, index_3) {
-  
-  print(df_file[index_1])
-  
   p <- df_file %>%
-    select(., index_1, index_2, index_3) %>% 
-    tidyr::gather(variable, value, -date_time) %>% 
+    select(., date_time, index_1, index_2, index_3) %>% 
+    pivot_longer(-date_time, names_to = "variable", values_to = "value") %>% 
+    transform(id = as.integer(factor(variable))) %>%
     plot_ly(.,
       x = ~date_time, 
       y = ~value,
       color = ~variable,
       colors = "Dark2",
-      yaxis = ~paste0("y", id),
-      type = 'scatter', 
-      mode = 'lines',
-      name = ~paste(index_1, "Index value"),
-      line = list(color = 'rgb(114, 186, 59)'),
-      text = ~paste(date_time, "<br>Price: $", index_1), 
-      hoverinfo = 'text'
+      yaxis = ~paste0("y", id)
     ) %>%
+    add_lines() %>%
+    subplot(nrows = 3, shareX = TRUE) %>% 
     layout(
-      title = "Prices of 2 chosen indices since June 2019",
-      yaxis = list(
-        title = "Price",
-        range = c(0,60),
-        zeroline = F,
-        tickprefix = "$"
-      ),
-      xaxis = list(
-        title = "Day",
-        range = c(0,130),
-        zeroline = F,
-        showgrid = F
-      ) )
+      title = "Prices of 3 chosen indices since June 2019" )
  
   return (p)
 }
     
-plotThreeLines(df1, "GE", "XAR")
-
-  # Subplots for in time analysis
-  # 
-  p <- economics %>%
-    tidyr::gather(variable, value, -date) %>%
-    transform(id = as.integer(factor(variable))) %>%
-    plot_ly(x = ~date, y = ~value, color = ~variable, colors = "Dark2",
-            yaxis = ~paste0("y", id)) %>%
-    add_lines() %>%
-    subplot(nrows = 5, shareX = TRUE)
-
-  p
-
-
-
-  
-  # plot_ly(.,
-  #         x = ~ID, 
-  #         y = .[index_1],
-  #         type = 'scatter', 
-  #         mode = 'lines',
-  #         name = ~paste(index_1, "Index value"),
-  #         line = list(color = 'rgb(114, 186, 59)'),
-  #         text = ~paste(date_time, "<br>Price: $", index_1), 
-  #         hoverinfo = 'text'
-  # ) %>%
-  #   layout(
-  #     title = "Prices of 2 chosen indices since June 2019",
-  #     yaxis = list(
-  #       title = "Price",
-  #       range = c(0,60),
-  #       zeroline = F,
-  #       tickprefix = "$"
-  #     ),
-  #     xaxis = list(
-  #       title = "Day",
-  #       range = c(0,130),
-  #       zeroline = F,
-  #       showgrid = F
-  #     ) )
-
+plotThreeLines(df1, "GE", "XAR", "ADM")
+plotThreeLines(dfm, "GE", "HAL", "xts_reddit")
