@@ -1,4 +1,4 @@
-
+# read data
 df <- read.csv('data_scrape/reddit_posts_all.csv', sep="\t",fileEncoding = "UTF-8")
 
 df_body <- data.frame(df$body)
