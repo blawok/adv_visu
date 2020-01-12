@@ -50,6 +50,6 @@ gg_corr <- ggplot(melted_cormat, aes(Var2, Var1, fill = value))+
 correlation_plot <- ggplotly(gg_corr)
 correlation_plot
 
-save(correlation_plot, file = "../objects/corr_plot.RData")
+save(correlation_plot, file = "./objects/corr_plot.RData")
 
-save(melted_cormat, file = "../objects/corr_plot_data.RData")
+save(melted_cormat, file = "./objects/corr_plot_data.RData")

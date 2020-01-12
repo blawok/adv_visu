@@ -14,88 +14,78 @@ install.packages("quantmod")
 library(xts)
 library(quantmod)
 library(dplyr)
+library(plotly)
+source("./functions/functions_thor.R")
 
 Sys.setlocale("LC_TIME", "English")
 
+# 
+# company_names <- c("GE", "XOM", "ADM", "HAL", "LMT")
+# currencies <- c("USD/IRR", "EUR/USD", "GBP/USD")
+# commodities <- c("CL", "ZG")
+# world_indices <- c("^GSPC", "^DJI", "^FTSE", "XAR")
+# 
+# actual_date <- Sys.Date()
+# 
+# 
+# 
+# getCompanies <- function (company, 
+#                            date_from = "2019-01-01", 
+#                            date_to = actual_date) {
+#   getSymbols(company,
+#                          from = date_from,
+#                          to = date_to,
+#                          auto.assign = FALSE)
+# }
+# 
+# getCurrencies <- function (currency, 
+#                           date_from = "2019-01-01", 
+#                           date_to = actual_date) {
+#   getFX(currency,
+#              from = date_from,
+#              to = date_to,
+#              auto.assign = FALSE)
+# }
+# 
+# getCommodities <- function (commodity, 
+#                             date_from = "2019-01-01", 
+#                             date_to = actual_date) {
+#   getSymbols(commodity,
+#         from = date_from,
+#         to = date_to,
+#         base.currency = "EUR", # For stability despite possible USD fluctuations
+#         auto.assign = FALSE)
+# }
+# 
+# getIndices <- function (w_index, 
+#                             date_from = "2019-01-01", 
+#                             date_to = actual_date) {
+#   getSymbols(w_index,
+#             from = date_from,
+#             to = date_to,
+#             auto.assign = FALSE)
+# }
+# 
+# 
+# for (company in company_names) {
+#   assign(paste("quot_", company, sep = ""), Op(getCompanies(company)))
+# }
+# 
+# for (curr in currencies) {
+#   curr2 <- gsub("[[:punct:]]", "", curr)
+#   assign(paste("curr_", curr2, sep = ""), getCurrencies(curr))
+# }
+# 
+# for (comm in commodities) {
+#   assign(paste("commodity_", comm, sep = ""), Op(getCommodities(comm)))
+# }
+# 
+# for (w_ind in world_indices) {
+#   w_ind2 <- gsub("[[:punct:]]", "", w_ind)
+#   assign(paste("w_index_", w_ind2, sep = ""), Op(getIndices(w_ind)))
+# }
+# 
 
-company_names <- c("GE", "XOM", "ADM", "HAL", "LMT")
-currencies <- c("USD/IRR", "EUR/USD", "GBP/USD")
-commodities <- c("CL", "ZG")
-world_indices <- c("^GSPC", "^DJI", "^FTSE", "XAR")
-
-actual_date <- Sys.Date()
-
-accumulateBy <- function(dat, var) {
-  var <- lazyeval::f_eval(var, dat)
-  lvls <- plotly:::getLevels(var)
-  dats <- lapply(seq_along(lvls), function(x) {
-    cbind(dat[var %in% lvls[seq(1, x)], ], frame = lvls[[x]])
-  })
-  dplyr::bind_rows(dats)
-}
-
-
-getCompanies <- function (company, 
-                           date_from = "2019-01-01", 
-                           date_to = actual_date) {
-  getSymbols(company,
-                         from = date_from,
-                         to = date_to,
-                         auto.assign = FALSE)
-}
-
-getCurrencies <- function (currency, 
-                          date_from = "2019-01-01", 
-                          date_to = actual_date) {
-  getFX(currency,
-             from = date_from,
-             to = date_to,
-             auto.assign = FALSE)
-}
-
-getCommodities <- function (commodity, 
-                            date_from = "2019-01-01", 
-                            date_to = actual_date) {
-  getSymbols(commodity,
-        from = date_from,
-        to = date_to,
-        base.currency = "EUR", # For stability despite possible USD fluctuations
-        auto.assign = FALSE)
-}
-
-getIndices <- function (w_index, 
-                            date_from = "2019-01-01", 
-                            date_to = actual_date) {
-  getSymbols(w_index,
-            from = date_from,
-            to = date_to,
-            auto.assign = FALSE)
-}
-
-
-for (company in company_names) {
-  assign(paste("quot_", company, sep = ""), Op(getCompanies(company)))
-}
-
-for (curr in currencies) {
-  curr2 <- gsub("[[:punct:]]", "", curr)
-  assign(paste("curr_", curr2, sep = ""), getCurrencies(curr))
-}
-
-for (comm in commodities) {
-  assign(paste("commodity_", comm, sep = ""), Op(getCommodities(comm)))
-}
-
-for (w_ind in world_indices) {
-  w_ind2 <- gsub("[[:punct:]]", "", w_ind)
-  assign(paste("w_index_", w_ind2, sep = ""), Op(getIndices(w_ind)))
-}
-
-# write.zoo(curr_EURUSD, "eurusd.csv", quote = FALSE, sep = ",")
-# write.zoo(curr_GBPUSD, "gbpusd.csv", quote = FALSE, sep = ",")
-# write.zoo(curr_USDIRR, "usdirr.csv", quote = FALSE, sep = ",")
-
-library(plotly)
 
 # data_x <- merge.xts(
 #   commodity_CL,
@@ -251,4 +241,3 @@ p2
 # 
 # p
 
-load(file = "../objects/corr_plot.RData")

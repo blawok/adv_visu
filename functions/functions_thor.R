@@ -6,14 +6,14 @@ library(dplyr)
 
 
 
-prepareReddit <- function(file_name = "../data/daily_sentiment.csv") {
+prepareReddit <- function(file_name = "./data/daily_sentiment.csv") {
   df_redd <- read.csv(file_name)
   df_redd$date <- as.Date(df_redd$date)
   df_redd$date <- as.POSIXct(strptime(df_redd$date, "%Y-%m-%d"))
   df_redd$ave_sentiment <- as.numeric(as.character(df_redd$ave_sentiment))
   df_redd$X <- NULL
   qxts <- xts(df_redd[,2], order.by=df_redd[,1])
-  write.zoo(qxts,file="reddit_sentiment.csv",index.name="date",row.names=FALSE,col.names=TRUE,sep=",")
+  write.zoo(qxts,file="./data/reddit_sentiment.csv",index.name="date",row.names=FALSE,col.names=TRUE,sep=",")
 }
 
 accumulateBy <- function(dat, var) {

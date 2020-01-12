@@ -3,7 +3,7 @@ library(xts)
 library(dplyr)
 library(tidyr)
 library(zoo)
-source("functions_thor.R")
+source("./functions/functions_thor.R")
 
 # Getting Reddit csv to work
 # prepareReddit <- function(file_name = "../data/daily_sentiment.csv") {
@@ -33,19 +33,15 @@ source("functions_thor.R")
 #   return(xts_file)
 # }
 
-xts1 <- csvToXTS("merged_indices.csv")
+xts1 <- csvToXTS("./data/merged_indices.csv")
 index(xts1) <- round(index(xts1), "days")
 
-xts_reddit <- csvToXTS("reddit_sentiment.csv")
+xts_reddit <- csvToXTS("./data/reddit_sentiment.csv")
 
 xts_reddit <- apply.daily(xts_reddit, sum)
 colnames(xts_reddit) <- c("Sentiment")
 
 # write.zoo(xts_reddit,file="reddit_xts.csv",index.name="date",row.names=FALSE,col.names=TRUE,sep=",")
-
-xts_merged <- merge.xts(xts1, xts_reddit) %>% 
-  na.locf(.) %>%
-  na.omit()
 
 xts_merged_small <- merge.xts(xts1, xts_reddit) %>% 
   na.omit()
@@ -61,7 +57,7 @@ xts_merged_small <- merge.xts(xts1, xts_reddit) %>%
 #   return (df)
 # }
 
-dfm <- xtsToDF(xts_merged)
+dfm <- xtsToDF(xts1)
 dfm_small <- xtsToDF(xts_merged_small)
 
 
