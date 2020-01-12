@@ -15,7 +15,6 @@ prepareReddit <- function(file_name = "../data/daily_sentiment.csv") {
   write.zoo(qxts,file="reddit_sentiment.csv",index.name="date",row.names=FALSE,col.names=TRUE,sep=",")
 }
 
-
 accumulateBy <- function(dat, var) {
   var <- lazyeval::f_eval(var, dat)
   lvls <- plotly:::getLevels(var)
@@ -39,15 +38,13 @@ index(xts1) <- round(index(xts1), "days")
 xts_reddit <- csvToXTS("reddit_sentiment.csv")
 
 xts_reddit <- apply.daily(xts_reddit, sum)
+colnames(xts_reddit) <- c("Sentiment")
 xts_merged <- merge.xts(xts1, xts_reddit) %>% 
+  na.locf(.) %>%
   na.omit()
 
-# zoo_m <- zoo(xts_merged)
-# zoo_m$xts_reddit <- rollapply(data = zoo_m$xts_reddit, width = 30, mean, na.rm = T, fill=NA, align = "right")
-# xts_merged <- xts(zoo_m) %>%
-#   na.omit()
-
-
+xts_merged_small <- merge.xts(xts1, xts_reddit) %>% 
+  na.omit()
 
 xtsToDF <- function(xts_file) {
   
@@ -60,8 +57,8 @@ xtsToDF <- function(xts_file) {
   return (df)
 }
 
-df1 <- xtsToDF(xts1)
-dfm <- xtsToDF(xts_m)
+dfm <- xtsToDF(xts_merged)
+dfm_small <- xtsToDF(xts_merged_small)
 
 plotThreeLines <- function(df_file, index_1, index_2, index_3) {
   p <- df_file %>%
@@ -76,12 +73,13 @@ plotThreeLines <- function(df_file, index_1, index_2, index_3) {
       yaxis = ~paste0("y", id)
     ) %>%
     add_lines() %>%
-    subplot(nrows = 3, shareX = TRUE) %>% 
+    subplot(nrows = 3, shareX = TRUE, shareY = FALSE) %>% 
     layout(
       title = "Prices of 3 chosen indices since June 2019" )
  
   return (p)
 }
     
-plotThreeLines(df1, "GE", "XAR", "ADM")
-plotThreeLines(dfm, "GE", "HAL", "xts_reddit")
+plotThreeLines(dfm, "GE", "ZG", "LMT")
+
+plotThreeLines(dfm_small, "GE", "HAL", "Sentiment")

@@ -96,43 +96,46 @@ for (w_ind in world_indices) {
 
 library(plotly)
 
-data_x <- merge.xts(
-  commodity_CL,
-  commodity_ZG,
-  curr_EURUSD,
-  curr_GBPUSD,
-  curr_USDIRR,
-  quot_ADM,
-  quot_GE,
-  quot_HAL,
-  quot_LMT,
-  quot_XOM,
-  w_index_DJI,
-  w_index_FTSE,
-  w_index_GSPC,
-  w_index_XAR
-) %>% na.omit()
+# data_x <- merge.xts(
+#   commodity_CL,
+#   commodity_ZG,
+#   curr_EURUSD,
+#   curr_GBPUSD,
+#   curr_USDIRR,
+#   quot_ADM,
+#   quot_GE,
+#   quot_HAL,
+#   quot_LMT,
+#   quot_XOM,
+#   w_index_DJI,
+#   w_index_FTSE,
+#   w_index_GSPC,
+#   w_index_XAR
+# ) %>% na.omit()
+
+z <- read.zoo("merged_indices.csv", sep=",", header = TRUE, tz = "")
+data_x <- as.xts(z)
 
 df_x <- data.frame(data_x)
 df_x <- cbind(date_time = rownames(df_x), df_x)
 df_x$ID <- seq.int(nrow(df_x))
 
-# df_x <- tail(df_x, 128)
-
-corr_x <- df_x[, -which(names(df_x) %in% c("date_time", "ID", "frame"))] %>% 
-  cor()
 
 
 df_x_acc <- df_x %>%
   accumulateBy(~ID)
 
 
-write.zoo(data_x,file="merged_indices.csv",index.name="date",row.names=FALSE,col.names=TRUE,sep=",")
+# write.zoo(data_x,file="merged_indices.csv",index.name="date",row.names=FALSE,col.names=TRUE,sep=",")
 
-z <- read.zoo("merged_indices.csv", sep=",", header = TRUE, tz = "")
-x <- as.xts(z)
+r <- read.zoo("reddit_xts.csv", sep=",", header = TRUE, tz = "")
+data_r <- as.xts(r)
+df_r <- data.frame(data_r)
+df_r <- cbind(date_time = rownames(df_r), df_r)
+df_r$ID <- seq.int(nrow(df_r))
 
-
+df_r_acc <- df_r %>%
+  accumulateBy(~ID)
 
 p1 <- df_x_acc %>%
   plot_ly(
@@ -193,11 +196,46 @@ p1 <- df_x_acc %>%
     )
   )
 
-p2 <- plot_ly(z = corr_x, type = "heatmap"
-)
+p2 <- df_r_acc %>%
+  plot_ly(
+    x = ~ID, 
+    y = ~data_r, 
+    frame = ~frame,
+    type = 'scatter', 
+    mode = 'lines',
+    name= "Sentiment",
+    line = list(color = 'rgb(114, 186, 59)'),
+    text = ~paste(date_time, "<br>Value:", data_r), 
+    hoverinfo = 'text'
+  ) %>%
+  layout(
+    title = "Sentiment since May 2019",
+    yaxis = list(
+      title = "Sentiment value", 
+      range = c(-0.7,0.7), 
+      zeroline = F
+    ),
+    xaxis = list(
+      title = "Day",
+      range = c(0,72), 
+      zeroline = F, 
+      showgrid = F
+    )
+  ) %>% 
+  animation_opts(
+    frame = 30, 
+    transition = 10, 
+    redraw = FALSE
+  ) %>%
+  animation_slider(
+    currentvalue = list(
+      prefix = "Day "
+    )
+  )
+
+p1
 
 p2
-
 
 
 # Subplots for in time analysis
@@ -211,3 +249,5 @@ p2
 #   subplot(nrows = 5, shareX = TRUE)
 # 
 # p
+
+load(file = "../objects/corr_plot.RData")
