@@ -1,6 +1,4 @@
-library(syuzhet)
-library(dplyr)
-library(plotly)
+
 
 
 getSentiment <- function(file_name) {

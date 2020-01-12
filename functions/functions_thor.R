@@ -3,6 +3,7 @@ library(plotly)
 library(tidyr)
 library(dplyr)
 library(reshape2)
+library(syuzhet)
 
 
 
@@ -55,7 +56,9 @@ plotMultiple <- function(df_file, index_1, index_2, index_3) {
             y = ~value,
             color = ~variable,
             colors = "Dark2",
-            yaxis = ~paste0("y", id)
+            yaxis = ~paste0("y", id),
+            text = ~paste(date_time, "<br>Close: $", value), 
+            hoverinfo = 'text'
     ) %>%
     add_lines() %>%
     subplot(nrows = 3, shareX = TRUE) %>% 
@@ -67,4 +70,87 @@ plotMultiple <- function(df_file, index_1, index_2, index_3) {
       ))
   
   return (p)
+}
+
+
+getLowerTri<-function(cormat){
+  cormat[upper.tri(cormat)] <- NA
+  return(cormat)
+}
+
+
+reorderCormat <- function(cormat){
+  dd <- as.dist((1-cormat)/2)
+  hc <- hclust(dd)
+  cormat <-cormat[hc$order, hc$order]
+}
+
+
+getSentiment <- function(thread_id) {
+  
+  df <- read.csv("./data/clean_reddit_df.csv",
+                 sep=",",
+                 encoding="UTF-8",
+                 stringsAsFactors=FALSE)
+  
+  df$sentiment <- df %>% 
+    filter("thread_id" == thread_id) %>% 
+    get_nrc_sentiment(.['clean_body']) 
+  
+  return(df)
+} 
+
+createRadar <- function(df, thread_id, title) {
+  
+  
+  df1 <- df %>%
+    filter(thread_id == thread_id) %>% 
+    select(sentiment)  %>% 
+    do.call(data.frame, .) %>% 
+    .[, -which(names(.) %in% c("sentiment.positive", "sentiment.negative"))]
+  
+  names(df1) <- gsub("sentiment.", "", names(df1), fixed = TRUE)
+  
+  sum_df <- df1 %>%
+    summarize_if(is.numeric, sum, na.rm=TRUE)
+  
+  summed <- rowSums(sum_df)
+  
+  sum_df <- sum_df/summed
+  
+  sum_min <- min(sum_df[1,], na.rm = T)
+  sum_max <- max(sum_df[1,], na.rm = T)
+  sum_dim <- ncol(sum_df)
+  
+  sum_df <- rbind(rep(sum_max, sum_dim), rep(sum_min, sum_dim), sum_df)
+  
+  p <- plot_ly(
+    type = 'scatterpolar',
+    fill = 'toself',
+    mode = "lines+markers"
+  ) %>%
+    add_trace(
+      r = as.numeric(as.vector(sum_df[3,])),
+      theta = as.character(as.vector(names(sum_df))),
+      name = title,
+      line = list(color = 'rgba(51, 40, 155, .8)',
+                  width = 0.6),
+      fillcolor = 'rgba(51, 40, 155, 0.5)',
+      marker = list(
+        color = 'rgb(51, 40, 155)',
+        size = 5
+      ) ) %>%
+    layout(
+      polar = list(
+        radialaxis = list(
+          visible = T,
+          range = c(min(sum_min, sum2_min), max(sum_max, sum2_max) + 0.1)
+        )
+      )
+    )
+  
+  return (p)
+  
+  
+  
 }
