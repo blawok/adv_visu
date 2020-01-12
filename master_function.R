@@ -40,11 +40,17 @@ a <- list(
   title = "Sentiment",
   range = c(-1, 1)
 )
-plot_ly(x=~sentiment$ave_sentiment,
+sentiment_histogram <- plot_ly(x=~sentiment$ave_sentiment,
              type = "histogram",
              histnorm = "probability",
              alpha = 0.8) %>% layout(xaxis = a)
 
+
+save(sentiment, file = "objects/sentiment_timestamp.RData")
+save(sentiment_histogram, file = "objects/sentiment_histogram.RData")
+load("objects/sentiment_timestamp.RData")
+load("objects/sentiment_histogram.RData")
+sentiment_histogram
 
 ### daily data
 daily_sentiment <- read_csv('data/daily_sentiment.csv')
@@ -53,10 +59,26 @@ a <- list(
   title = "Sentiment",
   range = c(-1, 1)
 )
-plot_ly(x=~daily_sentiment$ave_sentiment,
+daily_sentiment_histogram <- plot_ly(x=~daily_sentiment$ave_sentiment,
         type = "histogram",
         histnorm = "probability",
         alpha = 0.8) %>% layout(xaxis = a)
 
 
 
+################################################################################
+# CORRELATION
+
+library(ggplot2)
+library(plotly)
+load( "objects/corr_plot_data.RData")
+load( "objects/corr_plot.RData")
+correlation_plot
+
+
+
+################################################################################
+# TRIPLE UNDERLYING PLOT
+
+load("objects/triple_underlying_plot.RData")
+triple_underlying_plot

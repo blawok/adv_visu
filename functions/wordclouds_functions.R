@@ -39,6 +39,7 @@ prepare_data_for_wordcloud <- function(df_path = 'data/clean_reddit_df.csv',
 plot_wordcloud <- function(file_id = 'ej95ak',
                            use_image = FALSE) {
   
+  library(wordcloud2)
   load(paste("objects/",file_id,"_text_corpus.RData", sep=""))
   
   # build wordcloud 

@@ -1,4 +1,5 @@
 library(shiny)
+library(ggplot2)
 library(plotly)
 library(wordcloud2)
 library(shinydashboard)
@@ -32,9 +33,8 @@ ui <- dashboardPage(
                icon = icon("credit-card"),
                color = "orange")
     ),
-
-    br(),
-    br(),
+    
+    h3("Hello its bartek"),
     
     fluidRow(
       box(
@@ -44,7 +44,7 @@ ui <- dashboardPage(
         width = 12,
         "Data from last 6 months - over 100k posts", br(), br(),
         wordcloud2Output('wordcloud2')
-      ),
+      )
     
       
     ),
@@ -56,9 +56,50 @@ ui <- dashboardPage(
         background = "light-blue",
         solidHeader = TRUE,
         "Data from last 6 months - over 100k posts", br(), br(),
-        plotlyOutput("plot")
+        plotlyOutput("histogram_sentiment")
+      ),
+      box(
+        title = "Histogram of sentiment of given article",
+        background = "light-blue",
+        solidHeader = TRUE,
+        "Data from last 6 months - over 100k posts", br(), br(),
+        plotlyOutput("histogram_sentiment_article")
+      ),
+      
+      
+    ),
+    
+    
+    fluidRow(
+      
+      box(
+        title = "Correlation between prices and sentiment",
+        background = "light-blue",
+        solidHeader = TRUE,
+        width = 12,
+        height = "100%",
+        plotlyOutput("corr_plot", height = 700)
+        
       )
+      
+    ),
+    
+    
+    fluidRow(
+      
+      box(
+        title = "Triple underlying plot",
+        background = "light-blue",
+        solidHeader = TRUE,
+        width = 12,
+        height = "100%",
+        plotlyOutput("triple_underlying_plot", height = 650)
+        
+      )
+      
     )
+    
+    
     
   )
   )
@@ -72,18 +113,34 @@ server <- function(input, output) {
     wordcloud
   })
 
-  output$plot <- renderPlotly({
-    sentiment <- read_csv('data/df_with_sentiment_timestamp.csv')
-    sentiment <- filter(sentiment, sentiment$thread_id == 'ej95ak')  
+  output$histogram_sentiment <- renderPlotly({
     
-    a <- list(
-      title = "Sentiment",
-      range = c(-1, 1)
-    )
-    plot_ly(x=~sentiment$ave_sentiment,
-            type = "histogram",
-            histnorm = "probability",
-            alpha = 0.8) %>% layout(xaxis = a)
+    load("objects/sentiment_timestamp.RData")
+    load("objects/sentiment_histogram.RData")
+    sentiment_histogram
+    
+  })
+  
+  output$histogram_sentiment_article <- renderPlotly({
+    
+    load("objects/sentiment_timestamp.RData")
+    load("objects/sentiment_histogram.RData")
+    sentiment_histogram
+    
+  })
+  
+  output$corr_plot <- renderPlotly({
+    
+    load( "objects/corr_plot.RData")
+    correlation_plot
+    
+  })
+  
+  output$triple_underlying_plot <- renderPlotly({
+    
+    load("objects/triple_underlying_plot.RData")
+    triple_underlying_plot
+    
   })
   
 }
