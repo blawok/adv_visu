@@ -13,6 +13,7 @@ install.packages("quantmod")
 
 library(xts)
 library(quantmod)
+library(dplyr)
 
 Sys.setlocale("LC_TIME", "English")
 
