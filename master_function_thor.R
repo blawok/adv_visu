@@ -208,7 +208,19 @@ sentiment_selfdrawing_plot
 # IV part - Radar plots
 ##############################################################
 
-old_usa <- getSentiment("ej95ak")
+old_usa <- getSentiment("c35akk")
 
-createRadar(df_5, "Irans stuff")
+old_usa_radar <- createRadar(old_usa, "USA action reception 6 months ago")
+
+old_iran <- getSentiment("c555x4")
+
+old_iran_radar <- createRadar(old_iran, "Iran action reception 6 months ago")
+
+new_usa <- getSentiment("ej95ak")
+
+new_usa_radar <- createRadar(new_usa, "USA action reception today")
+
+new_iran <- getSentiment("elku7e")
+
+new_iran_radar <- createRadar(new_iran, "Iran action reception today")
 

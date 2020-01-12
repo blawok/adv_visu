@@ -86,25 +86,25 @@ reorderCormat <- function(cormat){
 }
 
 
-getSentiment <- function(thread_id) {
+getSentiment <- function(threadid) {
   
   df <- read.csv("./data/clean_reddit_df.csv",
                  sep=",",
                  encoding="UTF-8",
                  stringsAsFactors=FALSE)
   
-  df$sentiment <- df %>% 
-    filter("thread_id" == thread_id) %>% 
-    get_nrc_sentiment(.['clean_body']) 
+  df1 <- df %>% 
+    filter(., thread_id == threadid)
   
-  return(df)
+  df1$sentiment <- get_nrc_sentiment(df1$clean_body) 
+  
+  return(df1)
 } 
 
-createRadar <- function(df, thread_id, title) {
+createRadar <- function(df, title) {
   
   
-  df1 <- df %>%
-    filter(thread_id == thread_id) %>% 
+  df1 <- df %>% 
     select(sentiment)  %>% 
     do.call(data.frame, .) %>% 
     .[, -which(names(.) %in% c("sentiment.positive", "sentiment.negative"))]
@@ -133,18 +133,18 @@ createRadar <- function(df, thread_id, title) {
       r = as.numeric(as.vector(sum_df[3,])),
       theta = as.character(as.vector(names(sum_df))),
       name = title,
-      line = list(color = 'rgba(51, 40, 155, .8)',
+      line = list(color = 'rgba(3, 71, 72, .8)',
                   width = 0.6),
-      fillcolor = 'rgba(51, 40, 155, 0.5)',
+      fillcolor = 'rgba(3, 71, 72, .5)',
       marker = list(
-        color = 'rgb(51, 40, 155)',
+        color = 'rgb(3, 71, 72)',
         size = 5
       ) ) %>%
     layout(
       polar = list(
         radialaxis = list(
           visible = T,
-          range = c(min(sum_min, sum2_min), max(sum_max, sum2_max) + 0.1)
+          range = c(sum_min, sum_max)
         )
       )
     )
