@@ -8,15 +8,22 @@ source('functions/sentiment_functions.R')
 source('functions/wordclouds_functions.R')
 
 ################################################################################
+prepare_data_for_wordcloud(df_path = 'data/clean_reddit_df.csv',
+                                 thread_id = 'ej95ak',
+                                 use_filtred_data = TRUE)
+
+prepare_data_for_wordcloud(df_path = 'data/clean_reddit_df.csv',
+                           thread_id = 'full_data',
+                           use_filtred_data = FALSE)
+
 # WORDCLOUD FOR ALL DATA
-wordcloud <- plot_wordcloud(df_path = 'data/clean_reddit_df.csv',
-                            use_filtred_data = FALSE)
+wordcloud <- plot_wordcloud(file_id = 'full_data',
+                            use_image = FALSE)
 wordcloud
 
 # WORDCLOUD FOR SPECIFIC ARTICLE
-wordcloud_article <- plot_wordcloud(df_path = 'data/clean_reddit_df.csv',
-                                    thread_id = 'ej95ak',
-                                    use_filtred_data = TRUE)
+wordcloud_article <- plot_wordcloud(file_id = 'ej95ak',
+                                    use_image = FALSE)
 wordcloud_article
 
 

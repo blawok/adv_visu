@@ -15,33 +15,65 @@ ui <- dashboardPage(
     )
   ),
   dashboardBody(
-    strong("Analysis"),
-    br(),
-    br(),
-    br(),
-    br(),
-    strong("Wordcloud of an article"),
-    wordcloud2Output('wordcloud2'),
-    br(),
-    br(),
-    br(),
-    br(),
-    strong("Histogram of sentiment"),
-    plotlyOutput("plot")
+    fluidRow(
+      # A static valueBox
+      valueBox(104155,
+               "Number of posts",
+               icon = icon("credit-card"),
+               color = "purple"),
+      
+      # Dynamic valueBoxes
+      valueBox("6 months",
+               "Analysis period",
+               icon = icon("credit-card")),
+      
+      valueBox(53638,
+               "Distinct strings",
+               icon = icon("credit-card"),
+               color = "orange")
     ),
+
+    br(),
+    br(),
+    
+    fluidRow(
+      box(
+        title = "Wordcloud",
+        background = "light-blue",
+        solidHeader = TRUE,
+        width = 12,
+        "Data from last 6 months - over 100k posts", br(), br(),
+        wordcloud2Output('wordcloud2')
+      ),
+    
+      
+    ),
+    
+    
+    fluidRow(
+      box(
+        title = "Histogram of sentiment",
+        background = "light-blue",
+        solidHeader = TRUE,
+        "Data from last 6 months - over 100k posts", br(), br(),
+        plotlyOutput("plot")
+      )
+    )
+    
+  )
   )
 
 
 server <- function(input, output) {
   
   output$wordcloud2 <- renderWordcloud2({
-    wordcloud_article <- plot_wordcloud(df_path = 'data/clean_reddit_df.csv',
-                                        thread_id = 'ej95ak',
-                                        use_filtred_data = TRUE)
-    wordcloud_article
+    wordcloud <- plot_wordcloud(file_id = 'full_data',
+                                use_image = FALSE)
+    wordcloud
   })
 
   output$plot <- renderPlotly({
+    sentiment <- read_csv('data/df_with_sentiment_timestamp.csv')
     sentiment <- filter(sentiment, sentiment$thread_id == 'ej95ak')  
     
     a <- list(
