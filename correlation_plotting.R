@@ -1,16 +1,17 @@
 library(reshape2)
 library(ggplot2)
 library(plotly)
+library(reshape2)
 
 getLowerTri<-function(cormat){
   cormat[upper.tri(cormat)] <- NA
   return(cormat)
 }
 
-df_corr <- dfm[, -which (names(dfm) %in% c("date_time", "ID"))] %>% 
+df_co <- df_corr[, -which (names(df_corr) %in% c("date_time", "ID"))] %>% 
   na.omit()
 
-cormat <- round(cor(df_corr),2)
+cormat <- round(cor(df_co),2)
 
 reorderCormat <- function(cormat){
   # Use correlation between variables as distance

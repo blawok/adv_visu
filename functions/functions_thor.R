@@ -2,6 +2,7 @@ library(xts)
 library(plotly)
 library(tidyr)
 library(dplyr)
+library(reshape2)
 
 
 

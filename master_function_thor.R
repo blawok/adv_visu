@@ -29,6 +29,7 @@ dfm <- xtsToDF(xts1)
 dfm_small <- xtsToDF(xts_merged_small)
 
 df_corr <- xtsToDF(xts_corr)
+
     
 plotMultiple(dfm, "GE", "ZG", "LMT")
 

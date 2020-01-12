@@ -229,15 +229,3 @@ p1
 p2
 
 
-# Subplots for in time analysis
-# 
-# p <- economics %>%
-#   tidyr::gather(variable, value, -date) %>%
-#   transform(id = as.integer(factor(variable))) %>%
-#   plot_ly(x = ~date, y = ~value, color = ~variable, colors = "Dark2",
-#           yaxis = ~paste0("y", id)) %>%
-#   add_lines() %>%
-#   subplot(nrows = 5, shareX = TRUE)
-# 
-# p
-
