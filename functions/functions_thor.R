@@ -101,7 +101,11 @@ getSentiment <- function(threadid) {
   return(df1)
 } 
 
-createRadar <- function(df, title) {
+createRadar <- function(df, 
+                        title,
+                        rgba_marker = 'rgba(3, 71, 72, 1.0)',
+                        rgba_fill = 'rgba(3, 71, 72, .5)',
+                        rgba_line = 'rgba(3, 71, 72, .8)') {
   
   
   df1 <- df %>% 
@@ -111,18 +115,18 @@ createRadar <- function(df, title) {
   
   names(df1) <- gsub("sentiment.", "", names(df1), fixed = TRUE)
   
-  sum_df <- df1 %>%
+  sum_df1 <- df1 %>%
     summarize_if(is.numeric, sum, na.rm=TRUE)
   
-  summed <- rowSums(sum_df)
+  summed1 <- rowSums(sum_df1)
   
-  sum_df <- sum_df/summed
+  sum_df1 <- sum_df1/summed1
   
-  sum_min <- min(sum_df[1,], na.rm = T)
-  sum_max <- max(sum_df[1,], na.rm = T)
-  sum_dim <- ncol(sum_df)
+  sum_min1 <- min(sum_df1[1,], na.rm = T)
+  sum_max1 <- max(sum_df1[1,], na.rm = T)
+  sum_dim1 <- ncol(sum_df1)
   
-  sum_df <- rbind(rep(sum_max, sum_dim), rep(sum_min, sum_dim), sum_df)
+  sum_df1 <- rbind(rep(sum_max1, sum_dim1), rep(sum_min1, sum_dim1), sum_df1)
   
   p <- plot_ly(
     type = 'scatterpolar',
@@ -130,21 +134,21 @@ createRadar <- function(df, title) {
     mode = "lines+markers"
   ) %>%
     add_trace(
-      r = as.numeric(as.vector(sum_df[3,])),
-      theta = as.character(as.vector(names(sum_df))),
+      r = as.numeric(as.vector(sum_df1[3,])),
+      theta = as.character(as.vector(names(sum_df1))),
       name = title,
-      line = list(color = 'rgba(3, 71, 72, .8)',
+      line = list(color = rgba_line,
                   width = 0.6),
-      fillcolor = 'rgba(3, 71, 72, .5)',
+      fillcolor = rgba_fill,
       marker = list(
-        color = 'rgb(3, 71, 72)',
+        color = rgba_marker,
         size = 5
       ) ) %>%
     layout(
       polar = list(
         radialaxis = list(
           visible = T,
-          range = c(sum_min, sum_max)
+          range = c(sum_min1, sum_max1)
         )
       )
     )

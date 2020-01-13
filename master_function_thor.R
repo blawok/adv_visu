@@ -210,17 +210,34 @@ sentiment_selfdrawing_plot
 
 old_usa <- getSentiment("c35akk")
 
-old_usa_radar <- createRadar(old_usa, "USA action reception 6 months ago")
+old_usa_radar <- createRadar(df = old_usa, 
+                             title = "USA action reception 6 months ago", 
+                             rgba_marker = 'rgba(3, 71, 72, 1.0)',
+                             rgba_fill = 'rgba(3, 71, 72, 0.5)',
+                             rgba_line = 'rgba(3, 71, 72, 0.8)')
 
 old_iran <- getSentiment("c555x4")
 
-old_iran_radar <- createRadar(old_iran, "Iran action reception 6 months ago")
+old_iran_radar <- createRadar(df = old_iran, 
+                              title = "Iran action reception 6 months ago", 
+                              rgba_marker = 'rgba(62, 94, 208, 1.0)',
+                              rgba_fill = 'rgba(62, 94, 208, 0.5)',
+                              rgba_line = 'rgba(62, 94, 208, 0.8)')
+
 
 new_usa <- getSentiment("ej95ak")
 
-new_usa_radar <- createRadar(new_usa, "USA action reception today")
+new_usa_radar <- createRadar(df = new_usa, 
+                             title = "USA action reception today", 
+                             rgba_marker = 'rgba(242, 33, 33, 1.0)',
+                             rgba_fill = 'rgba(242, 33, 33, 0.5)',
+                             rgba_line = 'rgba(242, 33, 33, 0.8)')
 
 new_iran <- getSentiment("elku7e")
 
-new_iran_radar <- createRadar(new_iran, "Iran action reception today")
+new_iran_radar <- createRadar(df = new_iran, 
+                              title = "Iran action reception today", 
+                              rgba_marker = 'rgba(16, 188, 125, 208, 1.0)',
+                              rgba_fill = 'rgba(16, 188, 125, 0.5)',
+                              rgba_line = 'rgba(16, 188, 125, 0.8)')
 
