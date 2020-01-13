@@ -63,7 +63,7 @@ plotMultiple <- function(df_file, index_1, index_2, index_3) {
     add_lines() %>%
     subplot(nrows = 3, shareX = TRUE) %>% 
     layout(
-      title = "Prices of 3 chosen indices since June 2019",
+      # title = "Prices of 3 chosen indices since June 2019",
       xaxis = list(
         type = "Date",
         tickformat = "%Y-%m"
