@@ -28,9 +28,13 @@ dfm_small <- xtsToDF(xts_merged_small)
 df_corr <- xtsToDF(xts_corr)
 
     
-plotMultiple(dfm, "GE", "ZG", "LMT")
+triple_underlying_plot <- plotMultiple(dfm, "GE", "ZG", "LMT")
+triple_underlying_plot
+save(triple_underlying_plot, file = "objects/triple_underlying_plot.RData")
 
-plotMultiple(dfm_small, "GE", "HAL", "Sentiment")
+triple_underlying_sent_plot <- plotMultiple(dfm_small, "GE", "HAL", "Sentiment")
+triple_underlying_sent_plot
+save(triple_underlying_sent_plot, file = "objects/triple_underlying_sent_plot.RData")
 
 ##############################################################
 # II part - Correlation plotting
@@ -199,9 +203,11 @@ sentiment_selfdrawing_plot <- df_r_acc %>%
   )
 
 triple_selfdrawing_plot
+save(triple_selfdrawing_plot, file = "objects/triple_selfdrawing_plot.RData")
+
 
 sentiment_selfdrawing_plot
-
+save(sentiment_selfdrawing_plot, file = "objects/sentiment_selfdrawing_plot.RData")
 
 
 ##############################################################
@@ -216,6 +222,9 @@ old_usa_radar <- createRadar(df = old_usa,
                              rgba_fill = 'rgba(3, 71, 72, 0.5)',
                              rgba_line = 'rgba(3, 71, 72, 0.8)')
 
+save(old_usa, file = "objects/old_usa_data.RData")
+save(old_usa_radar, file = "objects/old_usa_radar.RData")
+
 old_iran <- getSentiment("c555x4")
 
 old_iran_radar <- createRadar(df = old_iran, 
@@ -224,6 +233,8 @@ old_iran_radar <- createRadar(df = old_iran,
                               rgba_fill = 'rgba(62, 94, 208, 0.5)',
                               rgba_line = 'rgba(62, 94, 208, 0.8)')
 
+save(old_iran, file = "objects/old_iran_data.RData")
+save(old_iran_radar, file = "objects/old_iran_radar.RData")
 
 new_usa <- getSentiment("ej95ak")
 
@@ -233,6 +244,11 @@ new_usa_radar <- createRadar(df = new_usa,
                              rgba_fill = 'rgba(242, 33, 33, 0.5)',
                              rgba_line = 'rgba(242, 33, 33, 0.8)')
 
+save(new_usa, file = "objects/new_usa_data.RData")
+save(new_usa_radar, file = "objects/new_usa_radar.RData")
+
+
+
 new_iran <- getSentiment("elku7e")
 
 new_iran_radar <- createRadar(df = new_iran, 
@@ -241,3 +257,5 @@ new_iran_radar <- createRadar(df = new_iran,
                               rgba_fill = 'rgba(16, 188, 125, 0.5)',
                               rgba_line = 'rgba(16, 188, 125, 0.8)')
 
+save(new_iran, file = "objects/new_iran_data.RData")
+save(new_iran_radar, file = "objects/new_iran_radar.RData")
