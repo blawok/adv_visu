@@ -12,21 +12,31 @@ library(syuzhet)
 source('functions/wordclouds_functions.R')
 load("objects/sentiment_timestamp.RData")
 
-ui <- navbarPage(title ="Iran vs Trump",
-                 theme = shinytheme("cerulean"),
+ui <- fluidPage(tags$style(HTML("p {
+                           color: white;
+                           }")
+                ),
+                
+                includeCSS(path = "AdminLTE.css"),
+                includeCSS(path = "shinydashboard.css"),
+                
+                
+  navbarPage(title ="Iran and USA conflict development analysis",
+                 theme = shinytheme("spacelab"),
                  fluid = TRUE,
-                 tabPanel("Map1", fluidRow(
-                   valueBox(104155,
-                            "Number of posts",
+                 
+                 tabPanel("Infoboxes", fluidRow(
+                   valueBox(value = tags$h3(104155, style = "color: white"),
+                            subtitle = tags$p("Number of posts", style = "color: white"),
                             icon = icon("user-edit"),
                             color = "purple"),
                    
-                   valueBox("6 months",
+                   valueBox(value = tags$h3("6 months", style = "color: white"),
                             "Analysis period",
                             icon = icon("calendar-alt"),
                             color = "light-blue"),
                    
-                   valueBox(53638,
+                   valueBox(value = tags$h3(53638, style = "color: white"),
                             "Distinct strings",
                             icon = icon("list-ol"),
                             color = "orange")
@@ -171,12 +181,9 @@ ui <- navbarPage(title ="Iran vs Trump",
                                      
                                    )
                           )
-                 ),
-                 
-                 includeCSS(path = "AdminLTE.css"),
-                 includeCSS(path = "shinydashboard.css")
-                 
                  )
+                 )
+)
 
 
 
@@ -269,7 +276,7 @@ server <- function(input, output) {
   
   
   output$LDAVis_old <- renderVis({
-    load("objects/LDAVis_old.RData")
+    # load("objects/LDAVis_old.RData")
     createJSON(phi = results$phi, 
                theta = results$theta, 
                doc.length = results$doc.length, 
@@ -280,7 +287,7 @@ server <- function(input, output) {
   }) 
   
   output$LDAVis_congress <- renderVis({
-    load("objects/LDAVis_congress.RData")
+    # load("objects/LDAVis_congress.RData")
     createJSON(phi = results$phi, 
                theta = results$theta, 
                doc.length = results$doc.length, 
