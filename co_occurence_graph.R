@@ -3,7 +3,7 @@ library(dplyr)
 df <- read.csv('data/clean_reddit_df.csv',
                stringsAsFactors=FALSE)
 
-df <- filter(df, df$thread_id == 'ej95ak')
+df <- filter(df, df$thread_id == 'ekad1u')
 
 library(tm)
 textCorpus <- 
@@ -12,7 +12,7 @@ textCorpus <-
 # %>%
 #   as.matrix()
 
-tdm <- removeSparseTerms(textCorpus,0.9999)
+tdm <- removeSparseTerms(textCorpus,0.95)
 
 # textCorpus <- sort(rowSums(textCorpus), decreasing=TRUE)
 # textCorpus2 <- textCorpus[1:1000]

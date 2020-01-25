@@ -12,26 +12,28 @@ library(syuzhet)
 source('functions/wordclouds_functions.R')
 load("objects/sentiment_timestamp.RData")
 
-ui <- navbarPage("Iran vs Trump",
+ui <- navbarPage(title ="Iran vs Trump",
                  theme = shinytheme("cerulean"),
+                 fluid = TRUE,
                  tabPanel("Map1", fluidRow(
                    valueBox(104155,
                             "Number of posts",
-                            icon = icon("credit-card"),
+                            icon = icon("user-edit"),
                             color = "purple"),
                    
                    valueBox("6 months",
                             "Analysis period",
-                            icon = icon("credit-card")),
+                            icon = icon("calendar-alt"),
+                            color = "light-blue"),
                    
                    valueBox(53638,
                             "Distinct strings",
-                            icon = icon("credit-card"),
+                            icon = icon("list-ol"),
                             color = "orange")
                  )),
                  
-                 
-                 tabPanel("Map2",
+                
+                 tabPanel("Wordcloud",
                           fluidRow(
                             box(
                               title = "Wordcloud",
@@ -46,7 +48,7 @@ ui <- navbarPage("Iran vs Trump",
                           )),
                  
                  
-                 tabPanel("Map3",
+                 tabPanel("Underlying price changes",
                           fluidRow(
                             
                             box(
@@ -60,7 +62,7 @@ ui <- navbarPage("Iran vs Trump",
                             )
                             
                           )),
-                 tabPanel("Map4",
+                 tabPanel("Histograms",
                           fluidRow(
                             box(
                               title = "Histogram of sentiment",
@@ -72,7 +74,7 @@ ui <- navbarPage("Iran vs Trump",
                             
                             
                           )),
-                 tabPanel("Map5",
+                 tabPanel("Correlation",
                           fluidRow(
                             
                             box(
@@ -86,7 +88,7 @@ ui <- navbarPage("Iran vs Trump",
                             )
                             
                           )),
-                 tabPanel("Map6",
+                 tabPanel("Bu",
                           fluidRow(
                             
                             box(
@@ -100,7 +102,7 @@ ui <- navbarPage("Iran vs Trump",
                             )
                             
                           )),
-                 tabPanel("Map7",
+                 tabPanel("Sentiment vs. prices",
                           fluidRow(
                             
                             box(
@@ -114,7 +116,7 @@ ui <- navbarPage("Iran vs Trump",
                             )
                             
                           )),
-                 tabPanel("Map8",
+                 tabPanel("Sentiment in time",
                           fluidRow(
                             
                             box(
@@ -127,13 +129,60 @@ ui <- navbarPage("Iran vs Trump",
                               
                             )
                             
-                          ))
+                          )),
+                 
+                 tabPanel("Moods 6 months ago",
+                          fluidRow(width=12,
+                            
+                            box(
+                              title = "Moods on reddit 6 months ago",
+                              solidHeader = TRUE,
+                              width = 6,
+                              height = "100%",
+                              plotlyOutput("old_usa_radar", height = 650)
+                              
+                              
+                            ),
+                            box(
+                              title = "Moods on reddit 6 months ago",
+                              solidHeader = TRUE,
+                              width = 6,
+                              height = "100%",
+                              plotlyOutput("old_iran_radar", height = 650)
+                              
+                              
+                            )
+                            
+                            
+                          )),
+                 tabPanel("Old LDAVis",
+                          fluidRow(width=12,
+                                   box(
+                                     visOutput('LDAVis_old')
+                                     
+                                   )
+                         )
+                 ),
+                 
+                 tabPanel("Congress LDAVis",
+                          fluidRow(width=12,
+                                   box(
+                                     visOutput('LDAVis_congress')
+                                     
+                                   )
+                          )
+                 ),
+                 
+                 includeCSS(path = "AdminLTE.css"),
+                 includeCSS(path = "shinydashboard.css")
+                 
                  )
 
 
 
 
 server <- function(input, output) {
+
   
   output$wordcloud2 <- renderWordcloud2({
     wordcloud <- plot_wordcloud(file_id = 'full_data',
@@ -191,6 +240,55 @@ server <- function(input, output) {
     sentiment_selfdrawing_plot
     
   })  
+  
+  
+  output$old_usa_radar <- renderPlotly({
+    
+    load("objects/old_usa_radar.RData")
+    old_usa_radar
+    
+  }) 
+  output$old_iran_radar <- renderPlotly({
+    
+    load("objects/old_iran_radar.RData")
+    old_iran_radar
+    
+  }) 
+  output$new_usa_radar <- renderPlotly({
+    
+    load("objects/new_usa_radar.RData")
+    new_usa_radar
+    
+  }) 
+  output$snew_iran_radar <- renderPlotly({
+    
+    load("objects/new_iran_radar.RData")
+    snew_iran_radar
+    
+  }) 
+  
+  
+  output$LDAVis_old <- renderVis({
+    load("objects/LDAVis_old.RData")
+    createJSON(phi = results$phi, 
+               theta = results$theta, 
+               doc.length = results$doc.length, 
+               vocab = results$vocab, 
+               term.frequency = results$term.frequency)
+    
+    
+  }) 
+  
+  output$LDAVis_congress <- renderVis({
+    load("objects/LDAVis_congress.RData")
+    createJSON(phi = results$phi, 
+               theta = results$theta, 
+               doc.length = results$doc.length, 
+               vocab = results$vocab, 
+               term.frequency = results$term.frequency)
+    
+    
+  }) 
   
   
 }
