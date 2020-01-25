@@ -4,17 +4,20 @@ library(plotly)
 library(wordcloud2)
 library(shinydashboard)
 library(shinythemes)
+library(shinyWidgets)
 library(xts)
 library(tidyr)
 library(dplyr)
 library(reshape2)
 library(syuzhet)
+library(LDAvis)
+
 source('functions/wordclouds_functions.R')
 load("objects/sentiment_timestamp.RData")
 
-ui <- fluidPage(tags$style(HTML("p {
-                           color: white;
-                           }")
+ui <- fluidPage(tags$style(HTML(".p {
+                                    color: white;
+                                    }")
                 ),
                 
                 includeCSS(path = "AdminLTE.css"),
@@ -25,164 +28,206 @@ ui <- fluidPage(tags$style(HTML("p {
                  theme = shinytheme("spacelab"),
                  fluid = TRUE,
                  
-                 tabPanel("Infoboxes", fluidRow(
-                   valueBox(value = tags$h3(104155, style = "color: white"),
-                            subtitle = tags$p("Number of posts", style = "color: white"),
-                            icon = icon("user-edit"),
-                            color = "purple"),
-                   
-                   valueBox(value = tags$h3("6 months", style = "color: white"),
-                            "Analysis period",
-                            icon = icon("calendar-alt"),
-                            color = "light-blue"),
-                   
-                   valueBox(value = tags$h3(53638, style = "color: white"),
-                            "Distinct strings",
-                            icon = icon("list-ol"),
-                            color = "orange")
-                 )),
-                 
-                
-                 tabPanel("Wordcloud",
+                 tabPanel("6 months of conflict", 
                           fluidRow(
-                            box(
-                              title = "Wordcloud",
-                              background = "light-blue",
-                              solidHeader = TRUE,
-                              width = 12,
-                              "Data from last 6 months - over 100k posts", br(), br(),
-                              wordcloud2Output('wordcloud2')
-                            )
-                            
-                            
-                          )),
-                 
-                 
-                 tabPanel("Underlying price changes",
+                                 valueBox(value = tags$h3(104155, style = "color: white"),
+                                          subtitle = tags$p("Number of posts", style = "color: white"),
+                                          icon = icon("user-edit"),
+                                          color = "purple"),
+                                 
+                                 valueBox(value = tags$h3("6 months", style = "color: white"),
+                                          "Analysis period",
+                                          icon = icon("calendar-alt"),
+                                          color = "light-blue"),
+                                 
+                                 valueBox(value = tags$h3(53638, style = "color: white"),
+                                          "Distinct strings",
+                                          icon = icon("list-ol"),
+                                          color = "orange")
+                                 ),
                           fluidRow(
-                            
-                            box(
-                              title = "Triple selfdrawing plot",
-                              background = "light-blue",
-                              solidHeader = TRUE,
-                              width = 12,
-                              height = "100%",
-                              plotlyOutput("triple_selfdrawing_plot", height = 650)
-                              
-                            )
-                            
-                          )),
-                 tabPanel("Histograms",
-                          fluidRow(
-                            box(
-                              title = "Histogram of sentiment",
-                              background = "light-blue",
-                              solidHeader = TRUE,
-                              "Data from last 6 months - over 100k posts", br(), br(),
-                              plotlyOutput("histogram_sentiment")
-                            )
-                            
-                            
-                          )),
-                 tabPanel("Correlation",
-                          fluidRow(
-                            
-                            box(
-                              title = "Correlation between prices and sentiment",
-                              background = "light-blue",
-                              solidHeader = TRUE,
-                              width = 12,
-                              height = "100%",
-                              plotlyOutput("corr_plot", height = 700)
-                              
-                            )
-                            
-                          )),
-                 tabPanel("Bu",
-                          fluidRow(
-                            
-                            box(
-                              title = "Triple underlying plot",
-                              background = "light-blue",
-                              solidHeader = TRUE,
-                              width = 12,
-                              height = "100%",
-                              plotlyOutput("triple_underlying_plot", height = 650)
-                              
-                            )
-                            
-                          )),
-                 tabPanel("Sentiment vs. prices",
-                          fluidRow(
-                            
-                            box(
-                              title = "Triple underlying sentiment plot",
-                              background = "light-blue",
-                              solidHeader = TRUE,
-                              width = 12,
-                              height = "100%",
-                              plotlyOutput("triple_underlying_sentiment_plot", height = 650)
-                              
-                            )
-                            
-                          )),
-                 tabPanel("Sentiment in time",
-                          fluidRow(
-                            
-                            box(
-                              title = "Sentiment selfdrawing plot",
-                              background = "light-blue",
-                              solidHeader = TRUE,
-                              width = 12,
-                              height = "100%",
-                              plotlyOutput("sentiment_selfdrawing_plot", height = 650)
-                              
-                            )
-                            
-                          )),
-                 
-                 tabPanel("Moods 6 months ago",
+                                box(
+                                  title = tags$h2("Data from last 6 months - over 100k posts"),
+                                  solidHeader = TRUE,
+                                  width = 12,
+                                   br(), br(),
+                                  wordcloud2Output('wordcloud2')
+                                  )
+                                )
+                          ),
+                 tabPanel("Reddit users' attitude 6 months ago",
+                            fluidRow(
+                                box(
+                                  title = "Histogram of sentiment",
+                                  background = "light-blue",
+                                  solidHeader = TRUE,
+                                  "Data from last 6 months - over 100k posts", br(), br(),
+                                  plotlyOutput("histogram_sentiment")
+                                  )
+                                )
+                          ),
+                 tabPanel("Reactions 6 months ago",
                           fluidRow(width=12,
-                            
-                            box(
-                              title = "Moods on reddit 6 months ago",
-                              solidHeader = TRUE,
-                              width = 6,
-                              height = "100%",
-                              plotlyOutput("old_usa_radar", height = 650)
-                              
-                              
-                            ),
-                            box(
-                              title = "Moods on reddit 6 months ago",
-                              solidHeader = TRUE,
-                              width = 6,
-                              height = "100%",
-                              plotlyOutput("old_iran_radar", height = 650)
-                              
-                              
-                            )
-                            
-                            
-                          )),
+                               box(
+                                 title = tags$h3("Reaction to USA approving attack on Iran"),
+                                 solidHeader = TRUE,
+                                 width = 6,
+                                 height = "100%",
+                                 plotlyOutput("old_usa_radar", height = 650)
+                                 ),
+                               box(
+                                 title = tags$h3("Reaction to Iranian missile shooting down the American drone"),
+                                 solidHeader = TRUE,
+                                 width = 6,
+                                 height = "100%",
+                                 plotlyOutput("old_iran_radar", height = 650)
+                                 )
+                               )
+                          ),
+                 tabPanel("Congress is decisive",
+                         fluidRow(width=12,
+                              box(
+                                title = tags$h3("Main topics after decision that Trump needs Congress aproval to attack"),
+                                visOutput('LDAVis_congress')
+                                )
+                              )
+                          ),
                  tabPanel("Old LDAVis",
                           fluidRow(width=12,
-                                   box(
-                                     visOutput('LDAVis_old')
-                                     
-                                   )
-                         )
-                 ),
-                 
-                 tabPanel("Congress LDAVis",
-                          fluidRow(width=12,
-                                   box(
-                                     visOutput('LDAVis_congress')
-                                     
-                                   )
+                               box(
+                                 visOutput('LDAVis_old')
+                                 )
+                               )
+                          ),
+                 tabPanel("Development of the situation",
+                          fluidRow(
+                              width = 12,
+                              box(
+                                title = "Prices of underlyings throughout half year",
+                                solidHeader = TRUE,
+                                width = 12,
+                                height = "100%",
+                                plotlyOutput("triple_selfdrawing_plot", height = 650)
+                                )
+                              ),
+                            fluidRow(
+                              box(
+                                width = 12,
+                                height = "100%",
+                                tags$h4("XAR - ; ADM - ; XOM - ")
+                                )
+                              )
+                          ),
+                 tabPanel("Sentiment in time",
+                          fluidRow(
+                              width = 12,
+                              box(
+                                title = "Sentiment evolution over time",
+                                solidHeader = TRUE,
+                                width = 12,
+                                height = "100%",
+                                plotlyOutput("sentiment_selfdrawing_plot", height = 300)
+                                )
+                              ),
+                          fluidRow(
+                            box(
+                               title = "Triple underlying plot",
+                               solidHeader = TRUE,
+                               width = 12,
+                               height = "100%",
+                               plotlyOutput("triple_underlying_plot", height = 500)
+                               )
+                            )
+                          ),
+                 tabPanel("Correlation with sentiment",
+                          fluidRow(
+                              width = 12,
+                              box(
+                                title = "Correlation between prices and sentiment",
+                                solidHeader = TRUE,
+                                width = 6,
+                                height = "100%",
+                                plotlyOutput("corr_plot", height = 600)
+                                ),
+                              box(
+                                title = "Triple underlying sentiment plot",
+                                solidHeader = TRUE,
+                                width = 6,
+                                height = "100%",
+                                plotlyOutput("triple_underlying_sentiment_plot", height = 600)
+                                )
+                              ),
+                          fluidRow(
+                            width = 12,
+                            height = "100%",
+                            tags$h4("GE - ; HAL - ", style = "text-align: center")
+                            )
                           )
+                 # tabPanel("Bu",
+                 #          fluidRow(
+                 #            
+                 #            box(
+                 #              title = "Triple underlying plot",
+                 #              background = "light-blue",
+                 #              solidHeader = TRUE,
+                 #              width = 12,
+                 #              height = "100%",
+                 #              plotlyOutput("triple_underlying_plot", height = 650)
+                 #              
+                 #            )
+                 #            
+                 #          )),
+                 # tabPanel("Sentiment vs. prices",
+                 #          fluidRow(
+                 #            
+                 #            box(
+                 #              title = "Triple underlying sentiment plot",
+                 #              background = "light-blue",
+                 #              solidHeader = TRUE,
+                 #              width = 12,
+                 #              height = "100%",
+                 #              plotlyOutput("triple_underlying_sentiment_plot", height = 650)
+                 #              
+                 #            )
+                 #            
+                 #          )),
+                 # 
+                 # 
+                 # 
+                 # tabPanel("Old LDAVis",
+                 #          fluidRow(width=12,
+                 #                   box(
+                 #                     visOutput('LDAVis_old')
+                 #                     
+                 #                   )
+                 #         )
+                 # ),
+                 # 
+                 # tabPanel("Congress LDAVis",
+                 #          fluidRow(width=12,
+                 #                   box(
+                 #                     visOutput('LDAVis_congress')
+                 #                     
+                 #                   )
+                 #          )
                  )
-                 )
+             
+             
+             
+             # tabPanel("Wordcloud",
+             #          fluidRow(
+             #            box(
+             #              title = "Wordcloud",
+             #              background = "light-blue",
+             #              solidHeader = TRUE,
+             #              width = 12,
+             #              "Data from last 6 months - over 100k posts", br(), br(),
+             #              wordcloud2Output('wordcloud2')
+             #            )
+             #            
+             #            
+             #          )),
+                 # )
 )
 
 
