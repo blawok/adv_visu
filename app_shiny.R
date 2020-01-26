@@ -92,7 +92,7 @@ ui <- fluidPage(tags$style(HTML(".p {
                                  ),
                           fluidRow(
                                 box(
-                                  title = tags$h3("Data from last 6 months - over 100k posts",
+                                  title = tags$h3("Data from ~100k posts over last 6 months",
                                                   style = "padding: 0px"),
                                   width = 12,
                                    br(), br(),
@@ -106,14 +106,13 @@ ui <- fluidPage(tags$style(HTML(".p {
                               width = 12,
                                 box(
                                   width = 6,
-                                  title = "Histogram of sentiment",
-                                  solidHeader = TRUE,
-                                  "Data from last 6 months - over 100k posts", br(), br(),
+                                  title = tags$h3("Sentiment of posts 6 months ago"),
+                                  solidHeader = TRUE, br(), br(),
                                   plotlyOutput("histogram_sentiment_old")
                                   ),
                                 box(
                                   width = 6,
-                                  title = tags$h3("Data from last 6 months - over 100k posts"),
+                                  title = tags$h3("What were the most popular words?"),
                                   solidHeader = TRUE,
                                   br(), br(),
                                   wordcloud2Output('wordcloud_old')
@@ -128,23 +127,21 @@ ui <- fluidPage(tags$style(HTML(".p {
                                  solidHeader = TRUE,
                                  width = 6,
                                  height = "100%",
-                                 plotlyOutput("old_usa_radar", height = 650)
+                                 plotlyOutput("old_usa_radar")
                                  ),
                                box(
                                  title = tags$h3("Reaction to Iranian missile shooting down the American drone"),
                                  solidHeader = TRUE,
                                  width = 6,
                                  height = "100%",
-                                 plotlyOutput("old_iran_radar", height = 650)
+                                 plotlyOutput("old_iran_radar")
                                  )
                                )
                           ),
                  tabPanel("Congress is decisive",
                          fluidRow(width=12,
-                              box(
-                                title = tags$h3("Main topics after decision that Trump needs Congress aproval to attack"),
+                                tags$h3("Main topics after decision that Trump needs Congress aproval to attack"),
                                 visOutput('LDAVis_congress')
-                                )
                               )
                           ),
                  tabPanel("Sentiment in time",
@@ -160,13 +157,33 @@ ui <- fluidPage(tags$style(HTML(".p {
                               ),
                           fluidRow(
                             box(
-                               title = "Triple underlying plot",
+                               title = "Prices of underlying changes",
                                solidHeader = TRUE,
                                width = 12,
                                height = "100%",
                                plotlyOutput("triple_underlying_plot", height = 500)
                                )
-                            )
+                            ),
+                          fluidRow(
+                           box(
+                             width = 4,
+                             height = "100%",
+                             tags$h4("GE - General Electric Company", 
+                                     style = "text-align: center")
+                             ),
+                           box(
+                             width = 4,
+                             height = "100%",
+                             tags$h4("LMT - Lockheed Martin Corporation",
+                                     style = "text-align: center")
+                           ),
+                           box(
+                             width = 4,
+                             height = "100%",
+                             tags$h4("ZG - Gold", 
+                                     style = "text-align: center")
+                           )
+                           )
                           ),
                  tabPanel("Correlation with sentiment",
                           fluidRow(
@@ -179,7 +196,7 @@ ui <- fluidPage(tags$style(HTML(".p {
                                 plotlyOutput("corr_plot", height = 600)
                                 ),
                               box(
-                                title = "Triple underlying sentiment plot",
+                                title = "Sentiment vs. GE and HAL prices",
                                 solidHeader = TRUE,
                                 width = 6,
                                 height = "100%",
@@ -189,7 +206,8 @@ ui <- fluidPage(tags$style(HTML(".p {
                           fluidRow(
                             width = 12,
                             height = "100%",
-                            tags$h4("GE - ; HAL - ", style = "text-align: center")
+                            tags$h4("GE - General Electric Company ;
+                                    HAL - Halliburton Company", style = "text-align: center")
                             )
                           ),
                    tabPanel("Reddit users' attitude now",
@@ -197,15 +215,12 @@ ui <- fluidPage(tags$style(HTML(".p {
                               width = 12,
                               box(
                                 width = 6,
-                                title = "Histogram of sentiment",
-                                solidHeader = TRUE,
-                                "Data from last 6 months - over 100k posts", br(), br(),
+                                title = tags$h3("Sentiment of posts now"), br(), br(),
                                 plotlyOutput("histogram_sentiment_new")
                               ),
                               box(
                                 width = 6,
-                                title = tags$h2("Data from last 6 months - over 100k posts"),
-                                solidHeader = TRUE,
+                                title = tags$h3("What are the most popular words now?"),
                                 br(), br(),
                                 imageOutput("image2")
                               )
@@ -214,21 +229,41 @@ ui <- fluidPage(tags$style(HTML(".p {
                    tabPanel("Perception now",
                             fluidRow(width=12,
                                 box(
-                                  title = tags$h3("Reaction to USA killing of Iranian General"),
+                                  title = tags$h3("Reddits' eaction to USA killing of Iranian General"),
                                   solidHeader = TRUE,
                                   width = 6,
                                   height = "100%",
-                                  plotlyOutput("new_usa_radar", height = 650)
+                                  plotlyOutput("new_usa_radar")
                                 ),
                                 box(
                                   title = tags$h3("Reaction to Iranian missile destryoing USA military base"),
                                   solidHeader = TRUE,
                                   width = 6,
                                   height = "100%",
-                                  plotlyOutput("new_iran_radar", height = 650)
+                                  plotlyOutput("new_iran_radar")
                                   )
                                 )
-                          )
+                          ),
+                   tabPanel("Conclusion?",
+                            fluidRow(
+                              tags$h1("Thank you for your attention",
+                                      style = "text-align: center"),
+                              width = 12,
+                              br()
+                            ),
+                            fluidRow(width = 12, 
+                                  column(4,
+                                         align="center",
+                                         imageOutput("gif_peace")),
+                                  column(2,
+                                         align="center",
+                                         br(),br(),br(),br(),br(),br(),br(),br(),
+                                         tags$h2("OR", style = "padding: 0px 0px 0px 50px")),
+                                  column(4,
+                                         align="left",
+                                         imageOutput("gif_notwar"))
+                            )
+                   )
                  # tabPanel("Development of the situation",
                  #          fluidRow(
                  #              width = 12,
@@ -458,6 +493,22 @@ server <- function(input, output) {
     return(list(
       src = "trump_war.png",
       height="70%")
+    )
+    
+  }, deleteFile = FALSE)
+  
+  output$gif_peace <- renderImage({
+    return(list(
+      src = "gif_trump.gif",
+      height = "97%")
+    )
+    
+  }, deleteFile = FALSE)
+  
+  output$gif_notwar <- renderImage({
+    return(list(
+      src = "gif_notwar.gif",
+      height = "97%")
     )
     
   }, deleteFile = FALSE)
