@@ -59,14 +59,13 @@ ui <- fluidPage(tags$style(HTML(".p {
                             fluidRow(
                                 box(
                                   title = "Histogram of sentiment",
-                                  background = "light-blue",
                                   solidHeader = TRUE,
                                   "Data from last 6 months - over 100k posts", br(), br(),
                                   plotlyOutput("histogram_sentiment")
                                   )
                                 )
                           ),
-                 tabPanel("Reactions 6 months ago",
+                 tabPanel("Perception 6 months ago",
                           fluidRow(width=12,
                                box(
                                  title = tags$h3("Reaction to USA approving attack on Iran"),
@@ -91,13 +90,6 @@ ui <- fluidPage(tags$style(HTML(".p {
                                 visOutput('LDAVis_congress')
                                 )
                               )
-                          ),
-                 tabPanel("Old LDAVis",
-                          fluidRow(width=12,
-                               box(
-                                 visOutput('LDAVis_old')
-                                 )
-                               )
                           ),
                  tabPanel("Development of the situation",
                           fluidRow(
@@ -162,6 +154,34 @@ ui <- fluidPage(tags$style(HTML(".p {
                             height = "100%",
                             tags$h4("GE - ; HAL - ", style = "text-align: center")
                             )
+                          ),
+                   # tabPanel("Reddit users' attitude now",
+                   #          fluidRow(
+                   #              box(
+                   #                title = "Histogram of sentiment",
+                   #                solidHeader = TRUE,
+                   #                "Data from last 6 months - over 100k posts", br(), br(),
+                   #                plotlyOutput("histogram_sentiment")
+                   #                )
+                   #            )
+                   #        ),
+                   tabPanel("Perception now",
+                            fluidRow(width=12,
+                                box(
+                                  title = tags$h3("Reaction to USA killing of Iranian General"),
+                                  solidHeader = TRUE,
+                                  width = 6,
+                                  height = "100%",
+                                  plotlyOutput("new_usa_radar", height = 650)
+                                ),
+                                box(
+                                  title = tags$h3("Reaction to Iranian missile destryoing USA military base"),
+                                  solidHeader = TRUE,
+                                  width = 6,
+                                  height = "100%",
+                                  plotlyOutput("new_iran_radar", height = 650)
+                                  )
+                                )
                           )
                  # tabPanel("Bu",
                  #          fluidRow(
@@ -312,32 +332,32 @@ server <- function(input, output) {
     new_usa_radar
     
   }) 
-  output$snew_iran_radar <- renderPlotly({
+  output$new_iran_radar <- renderPlotly({
     
     load("objects/new_iran_radar.RData")
-    snew_iran_radar
+    new_iran_radar
     
   }) 
   
   
-  output$LDAVis_old <- renderVis({
-    # load("objects/LDAVis_old.RData")
-    createJSON(phi = results$phi, 
-               theta = results$theta, 
-               doc.length = results$doc.length, 
-               vocab = results$vocab, 
-               term.frequency = results$term.frequency)
-    
-    
-  }) 
+  # output$LDAVis_old <- renderVis({
+  #   load("objects/LDAVis_old.RData")
+  #   createJSON(phi = results$phi, 
+  #              theta = results$theta, 
+  #              doc.length = results$doc.length, 
+  #              vocab = results$vocab, 
+  #              term.frequency = results$term.frequency)
+  #   
+  #   
+  # }) 
   
   output$LDAVis_congress <- renderVis({
-    # load("objects/LDAVis_congress.RData")
-    createJSON(phi = results$phi, 
-               theta = results$theta, 
-               doc.length = results$doc.length, 
-               vocab = results$vocab, 
-               term.frequency = results$term.frequency)
+    load("objects/LDAVis_congress.RData")
+    createJSON(phi = results2$phi, 
+               theta = results2$theta, 
+               doc.length = results2$doc.length, 
+               vocab = results2$vocab, 
+               term.frequency = results2$term.frequency)
     
     
   }) 
