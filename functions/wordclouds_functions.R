@@ -12,9 +12,9 @@ prepare_data_for_wordcloud <- function(df_path = 'data/clean_reddit_df.csv',
   
   df <- read.csv(df_path, sep=",", encoding="UTF-8")
   
-  if (use_filtred_data) {
+  # if (use_filtred_data) {
     df <- filter(df, df$thread_id == thread_id)  
-  }
+  # }
   
   text <- str_c(df$clean_body, collapse = "")
   

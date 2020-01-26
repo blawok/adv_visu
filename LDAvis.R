@@ -103,6 +103,8 @@ system("json/mv json/index.html json/results.html")
 
 # save(results, file = "./objects/LDAVis_old.RData")
 
+
+
 ###################################
 # NEW
 ###################################
@@ -180,7 +182,7 @@ t2 - t1
 theta <- t(apply(fit$document_sums + alpha, 2, function(x) x/sum(x)))
 phi <- t(apply(t(fit$topics) + eta, 2, function(x) x/sum(x)))
 
-results <- list(phi = phi,
+results2 <- list(phi = phi,
                 theta = theta,
                 doc.length = doc.length,
                 vocab = vocab,
@@ -197,4 +199,4 @@ json <- createJSON(phi = results$phi,
 serVis(json, out.dir = './json_new/', open.browser = TRUE)
 system("json_new/mv json_new/index.html json_new/results.html")
 
-# save(results, file = "./objects/LDAVis_congress.RData")
+save(results2, file = "./objects/LDAVis_congress.RData")

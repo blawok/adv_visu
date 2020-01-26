@@ -4,7 +4,6 @@ library(plotly)
 library(wordcloud2)
 library(shinydashboard)
 library(shinythemes)
-library(shinyWidgets)
 library(xts)
 library(tidyr)
 library(dplyr)
@@ -13,10 +12,27 @@ library(syuzhet)
 library(LDAvis)
 
 source('functions/wordclouds_functions.R')
-load("objects/sentiment_timestamp.RData")
+
+# load("objects/sentiment_o.RData")
+# load("objects/sentiment_timestamp_old.RData")
+# load("objects/sentiment_histogram_old.RData")
+# 
+# load("objects/sentiment_n.RData")
+# load("objects/sentiment_timestamp_new.RData")
+# load("objects/sentiment_histogram_new.RData")
+
+
 
 ui <- fluidPage(tags$style(HTML(".p {
-                                    color: white;
+                                    color: white;}
+                                    .navbar-nav > li > a, .navbar-brand {
+                   padding-top:10px !important; 
+                   padding-bottom:10px !important;
+                   padding-left:10px !important;
+                   padding-right:5px !important;
+                   height: 30px;
+                 }
+                 .navbar {min-height:25px !important;
                                     }")
                 ),
                 
@@ -27,7 +43,35 @@ ui <- fluidPage(tags$style(HTML(".p {
   navbarPage(title ="Iran and USA conflict development analysis",
                  theme = shinytheme("spacelab"),
                  fluid = TRUE,
-                 
+                 tabPanel("Presentation",
+                          fluidRow(
+                            tags$h1("USA vs Iran conflict - how do the redditors look at it?",
+                                    style = "text-align: center"),
+                            width = 12,
+                            br()
+                            ),
+                          fluidRow(
+                            box(width = 12, 
+                                column(4,
+                                       align="center",
+                                       imageOutput("image_trump"),
+                                       style = "transform: rotate(-8deg); padding: 50px 0px 0px 0px"),
+                                column(6,
+                                       align="right",
+                                       imageOutput("image_war"),
+                                       style = "transform: rotate(8deg); padding: 50px 0px 0px 50px"),
+                                column(2)
+                            )
+                            ),
+                          fluidRow(
+                            tags$h5("Made by:"),
+                            width = 12
+                            ),
+                          fluidRow(
+                            tags$h4("Bartłomiej Kowalczuk & Michał Thor"),
+                            width = 12
+                            )
+                          ),
                  tabPanel("6 months of conflict", 
                           fluidRow(
                                  valueBox(value = tags$h3(104155, style = "color: white"),
@@ -43,27 +87,39 @@ ui <- fluidPage(tags$style(HTML(".p {
                                  valueBox(value = tags$h3(53638, style = "color: white"),
                                           "Distinct strings",
                                           icon = icon("list-ol"),
-                                          color = "orange")
+                                          color = "orange"),
+                                 style = "padding: 0px"
                                  ),
                           fluidRow(
                                 box(
-                                  title = tags$h2("Data from last 6 months - over 100k posts"),
-                                  solidHeader = TRUE,
+                                  title = tags$h3("Data from last 6 months - over 100k posts",
+                                                  style = "padding: 0px"),
                                   width = 12,
                                    br(), br(),
-                                  wordcloud2Output('wordcloud2')
+                                  wordcloud2Output('wordcloud2', height = 400),
+                                  style = "padding: 0px"
                                   )
                                 )
                           ),
                  tabPanel("Reddit users' attitude 6 months ago",
                             fluidRow(
+                              width = 12,
                                 box(
+                                  width = 6,
                                   title = "Histogram of sentiment",
                                   solidHeader = TRUE,
                                   "Data from last 6 months - over 100k posts", br(), br(),
-                                  plotlyOutput("histogram_sentiment")
-                                  )
+                                  plotlyOutput("histogram_sentiment_old")
+                                  ),
+                                box(
+                                  width = 6,
+                                  title = tags$h3("Data from last 6 months - over 100k posts"),
+                                  solidHeader = TRUE,
+                                  br(), br(),
+                                  wordcloud2Output('wordcloud_old')
                                 )
+                                )
+                    
                           ),
                  tabPanel("Perception 6 months ago",
                           fluidRow(width=12,
@@ -88,25 +144,6 @@ ui <- fluidPage(tags$style(HTML(".p {
                               box(
                                 title = tags$h3("Main topics after decision that Trump needs Congress aproval to attack"),
                                 visOutput('LDAVis_congress')
-                                )
-                              )
-                          ),
-                 tabPanel("Development of the situation",
-                          fluidRow(
-                              width = 12,
-                              box(
-                                title = "Prices of underlyings throughout half year",
-                                solidHeader = TRUE,
-                                width = 12,
-                                height = "100%",
-                                plotlyOutput("triple_selfdrawing_plot", height = 650)
-                                )
-                              ),
-                            fluidRow(
-                              box(
-                                width = 12,
-                                height = "100%",
-                                tags$h4("XAR - ; ADM - ; XOM - ")
                                 )
                               )
                           ),
@@ -155,16 +192,25 @@ ui <- fluidPage(tags$style(HTML(".p {
                             tags$h4("GE - ; HAL - ", style = "text-align: center")
                             )
                           ),
-                   # tabPanel("Reddit users' attitude now",
-                   #          fluidRow(
-                   #              box(
-                   #                title = "Histogram of sentiment",
-                   #                solidHeader = TRUE,
-                   #                "Data from last 6 months - over 100k posts", br(), br(),
-                   #                plotlyOutput("histogram_sentiment")
-                   #                )
-                   #            )
-                   #        ),
+                   tabPanel("Reddit users' attitude now",
+                            fluidRow(
+                              width = 12,
+                              box(
+                                width = 6,
+                                title = "Histogram of sentiment",
+                                solidHeader = TRUE,
+                                "Data from last 6 months - over 100k posts", br(), br(),
+                                plotlyOutput("histogram_sentiment_new")
+                              ),
+                              box(
+                                width = 6,
+                                title = tags$h2("Data from last 6 months - over 100k posts"),
+                                solidHeader = TRUE,
+                                br(), br(),
+                                imageOutput("image2")
+                              )
+                            )
+                            ),
                    tabPanel("Perception now",
                             fluidRow(width=12,
                                 box(
@@ -183,6 +229,25 @@ ui <- fluidPage(tags$style(HTML(".p {
                                   )
                                 )
                           )
+                 # tabPanel("Development of the situation",
+                 #          fluidRow(
+                 #              width = 12,
+                 #              box(
+                 #                title = "Prices of underlyings throughout half year",
+                 #                solidHeader = TRUE,
+                 #                width = 12,
+                 #                height = "100%",
+                 #                plotlyOutput("triple_selfdrawing_plot", height = 650)
+                 #                )
+                 #              ),
+                 #            fluidRow(
+                 #              box(
+                 #                width = 12,
+                 #                height = "100%",
+                 #                tags$h4("XAR - ; ADM - ; XOM - ")
+                 #                )
+                 #              )
+                 #          ),
                  # tabPanel("Bu",
                  #          fluidRow(
                  #            
@@ -255,6 +320,7 @@ ui <- fluidPage(tags$style(HTML(".p {
 
 server <- function(input, output) {
 
+
   
   output$wordcloud2 <- renderWordcloud2({
     wordcloud <- plot_wordcloud(file_id = 'full_data',
@@ -262,21 +328,29 @@ server <- function(input, output) {
     wordcloud
   })
   
-  output$histogram_sentiment <- renderPlotly({
-    
-    load("objects/sentiment_timestamp.RData")
-    load("objects/sentiment_histogram.RData")
-    sentiment_histogram
+  output$histogram_sentiment_old <- renderPlotly({
+
+    sentiment_histogram_old
     
   })
   
-  # output$histogram_sentiment_article <- renderPlotly({
-  #   
-  #   load("objects/sentiment_timestamp.RData")
-  #   load("objects/sentiment_histogram.RData")
-  #   sentiment_histogram
-  #   
-  # })
+  output$wordcloud_old <- renderWordcloud2({
+    wordcloud_old <- plot_wordcloud(file_id = 'ccednx',
+                                use_image = FALSE)
+    wordcloud_old
+  })
+  
+  output$histogram_sentiment_new <- renderPlotly({
+
+    sentiment_histogram_new
+
+  })
+  
+  output$wordcloud_new <- renderWordcloud2({
+    wordcloud_new <- plot_wordcloud(file_id = 'ej7ykn',
+                                    use_image = FALSE)
+    wordcloud_new
+  })
   
   output$corr_plot <- renderPlotly({
     
@@ -360,7 +434,33 @@ server <- function(input, output) {
                term.frequency = results2$term.frequency)
     
     
-  }) 
+  })
+  
+  
+  output$image2 <- renderImage({
+    return(list(
+        src = "scrn_new_wc.JPG",
+        height="400px", 
+        width="600px")
+      )
+    
+  }, deleteFile = FALSE)
+  
+  output$image_trump <- renderImage({
+    return(list(
+      src = "trump_meme.jpg",
+      height="90%")
+    )
+    
+  }, deleteFile = FALSE)
+  
+  output$image_war <- renderImage({
+    return(list(
+      src = "trump_war.png",
+      height="70%")
+    )
+    
+  }, deleteFile = FALSE)
   
   
 }
