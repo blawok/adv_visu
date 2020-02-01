@@ -4,7 +4,7 @@ library(tidyr)
 library(dplyr)
 library(reshape2)
 library(syuzhet)
-
+library(stringr)
 
 
 
@@ -92,13 +92,36 @@ getSentiment <- function(threadid) {
                  sep=",",
                  encoding="UTF-8",
                  stringsAsFactors=FALSE)
-  
-  df1 <- df %>% 
+  df <- df %>% 
     filter(., thread_id == threadid)
   
-  df1$sentiment <- get_nrc_sentiment(df1$clean_body) 
+  text <- str_c(df$clean_body, collapse = "")
   
-  return(df1)
+  library(tm)
+  
+  sw <- c('that', 'the', 'can', 'want', 'trump', 'like','war', 'iran', 'people', 'get', 'also', 'even', 'wars', 'what')
+  
+  # Convert the data into a summary table
+  textCorpus <- 
+    Corpus(VectorSource(text)) %>%
+    tm_map(., content_transformer(tolower)) %>% 
+    tm_map(., removeWords, stopwords("english")) %>% 
+    tm_map(., removeWords, sw) %>% 
+    TermDocumentMatrix() %>%
+    as.matrix()
+  
+  textCorpus <- sort(rowSums(textCorpus), decreasing=TRUE)
+  textCorpus <- data.frame(word = names(textCorpus),
+                           freq=textCorpus,
+                           row.names = NULL)
+  
+  textCorpus$word <- as.character(textCorpus$word)
+  
+
+  
+  textCorpus$sentiment <- get_nrc_sentiment(textCorpus$word) 
+  
+  return(textCorpus)
 } 
 
 createRadar <- function(df, 
@@ -110,10 +133,16 @@ createRadar <- function(df,
   
   df1 <- df %>% 
     select(sentiment)  %>% 
+    cbind(df$freq) %>% 
     do.call(data.frame, .) %>% 
     .[, -which(names(.) %in% c("sentiment.positive", "sentiment.negative"))]
+
   
   names(df1) <- gsub("sentiment.", "", names(df1), fixed = TRUE)
+  
+  df1[,1:8] <- df1[,1:8]*df1$df.freq
+  df1$df.freq <- NULL
+  
   
   sum_df1 <- df1 %>%
     summarize_if(is.numeric, sum, na.rm=TRUE)

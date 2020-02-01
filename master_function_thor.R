@@ -40,8 +40,14 @@ save(triple_underlying_sent_plot, file = "objects/triple_underlying_sent_plot.RD
 # II part - Correlation plotting
 ##############################################################
 
-df_co <- df_corr[, -which (names(df_corr) %in% c("date_time", "ID"))] %>% 
+df_co <- df_corr %>%
+  mutate_at(vars(CL:Sentiment), funs(.-lag(.)))
+
+df_co <- df_co[, -which (names(df_corr) %in% c("date_time", "ID"))] %>% 
   na.omit()
+
+df_co <- df_co[ which(df_co['Sentiment'] != 0), ]
+
 
 cormat <- round(cor(df_co),2)
 
@@ -224,6 +230,8 @@ old_usa_radar <- createRadar(df = old_usa,
 
 save(old_usa, file = "objects/old_usa_data.RData")
 save(old_usa_radar, file = "objects/old_usa_radar.RData")
+load("objects/old_usa_radar.RData")
+
 
 old_iran <- getSentiment("c555x4")
 
@@ -235,6 +243,8 @@ old_iran_radar <- createRadar(df = old_iran,
 
 save(old_iran, file = "objects/old_iran_data.RData")
 save(old_iran_radar, file = "objects/old_iran_radar.RData")
+load("objects/old_iran_radar.RData")
+
 
 new_usa <- getSentiment("ej95ak")
 

@@ -229,7 +229,7 @@ ui <- fluidPage(tags$style(HTML(".p {
                    tabPanel("Perception now",
                             fluidRow(width=12,
                                 box(
-                                  title = tags$h3("Reddits' eaction to USA killing of Iranian General"),
+                                  title = tags$h3("Reddits' reaction to USA killing of Iranian General"),
                                   solidHeader = TRUE,
                                   width = 6,
                                   height = "100%",
@@ -244,24 +244,26 @@ ui <- fluidPage(tags$style(HTML(".p {
                                   )
                                 )
                           ),
-                   tabPanel("Conclusion?",
+                   tabPanel("Conclusion?",fluidRow(width = 12, 
+                                  column(4,
+                                         align="center",
+                                         br(),br(),br(),
+                                         imageOutput("gif_peace")),
+                                  column(2,
+                                         align="center",
+                                         br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),br(),
+                                         tags$h2("OR", style = "padding: 0px 0px 0px 50px")),
+                                  column(4,
+                                         align="left",
+                                         br(),br(),br(),
+                                         imageOutput("gif_notwar"))
+                            ),
                             fluidRow(
+                              br(),br(),br(),
                               tags$h1("Thank you for your attention",
                                       style = "text-align: center"),
                               width = 12,
                               br()
-                            ),
-                            fluidRow(width = 12, 
-                                  column(4,
-                                         align="center",
-                                         imageOutput("gif_peace")),
-                                  column(2,
-                                         align="center",
-                                         br(),br(),br(),br(),br(),br(),br(),br(),
-                                         tags$h2("OR", style = "padding: 0px 0px 0px 50px")),
-                                  column(4,
-                                         align="left",
-                                         imageOutput("gif_notwar"))
                             )
                    )
                  # tabPanel("Development of the situation",
