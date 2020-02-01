@@ -19,14 +19,24 @@ source('functions/wordclouds_functions.R')
   df <- read.csv('data/clean_reddit_df.csv', sep=",", encoding="UTF-8")
   
   # if (use_filtred_data) {
-  df <- filter(df, df$thread_id == 'ej7ykn')  
+  df <- filter(df, df$thread_id == 'c35akk')  
   # }
   
   text <- str_c(df$clean_body, collapse = "")
   
+  
+  # install.packages("tm")
+  library(tm)
+  # print(stopwords('english'))
+  
+  sw <- c('that', 'the', 'trump', 'like','war', 'iran', 'people', 'get', 'also', 'even', 'wars', 'what')
+  
   # Convert the data into a summary table
   textCorpus <- 
     Corpus(VectorSource(text)) %>%
+    tm_map(., content_transformer(tolower)) %>% 
+    tm_map(., removeWords, stopwords("english")) %>% 
+    tm_map(., removeWords, sw) %>% 
     TermDocumentMatrix() %>%
     as.matrix()
   
@@ -35,7 +45,7 @@ source('functions/wordclouds_functions.R')
                            freq=textCorpus,
                            row.names = NULL)
   
-  save(textCorpus, file = paste("objects/", 'ej7ykn', "_text_corpus.RData", sep=""))
+  save(textCorpus, file = paste("objects/", 'c35akk_clean', "_text_corpus.RData", sep=""))
   
 
 
@@ -60,11 +70,20 @@ library(wordcloud2)
 load(paste("objects/",'ccednx',"_text_corpus.RData", sep=""))
 wordcloud2(data = textCorpus,backgroundColor="white")
 
+load(paste("objects/",'ccednx_clean',"_text_corpus.RData", sep=""))
+wordcloud2(data = textCorpus,backgroundColor="white")
+
+load(paste("objects/",'c35akk_clean',"_text_corpus.RData", sep=""))
+wordcloud2(data = textCorpus,backgroundColor="white")
+
 # nowy
 load(paste("objects/",'ej95ak',"_text_corpus.RData", sep=""))
 wordcloud2(data = textCorpus,backgroundColor="white")
 
-load(paste("objects/",'ej7ykn',"_text_corpus.RData", sep=""))
+load(paste("objects/",'ej95ak_clean',"_text_corpus.RData", sep=""))
+wordcloud2(data = textCorpus,backgroundColor="white")
+
+load(paste("objects/",'ej7ykn_clean',"_text_corpus.RData", sep=""))
 wordcloud2(data = textCorpus,backgroundColor="white")
 
 # all
